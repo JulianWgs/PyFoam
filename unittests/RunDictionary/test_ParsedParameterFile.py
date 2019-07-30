@@ -688,12 +688,9 @@ theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest5,"test"))
 
 class ParsedParameterFileTest6(unittest.TestCase):
     def setUp(self):
-        try:
-            if foamVersionNumber()>=(1,6):
-                from nose.plugins.skip import SkipTest
-                raise SkipTest()
-        except ImportError:
-            pass
+        if foamVersionNumber()>=(1,6):
+            import pytest
+            pytest.skip("aachenBomb-tutorial no longer existing")
 
         self.theFile=mktemp()
         copyfile(path.join(dieselAachenTutorial(),"0","spray"),self.theFile)
