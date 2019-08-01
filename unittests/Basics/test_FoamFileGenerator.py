@@ -1,8 +1,11 @@
 import unittest
+import pytest
 
 from PyFoam.Basics.FoamFileGenerator import FoamFileGenerator,makeString,FoamFileGeneratorError
 from PyFoam.Basics.DataStructures import DictProxy,TupleProxy,Unparsed,UnparsedList,BoolProxy
 from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile,FoamStringParser
+
+from PyFoam.Error import FatalErrorPyFoamException
 
 from PyFoam.FoamInformation import oldTutorialStructure,foamTutorials,foamVersionNumber,foamFork
 
@@ -19,8 +22,6 @@ from PyFoam.Error import error
 
 if PY3:
     long=int
-
-theSuite=unittest.TestSuite()
 
 def damBreakTutorial():
     prefix=foamTutorials()
@@ -132,6 +133,7 @@ class FoamFileGeneratorTest(unittest.TestCase):
         d["a"]=False
         g=FoamFileGenerator(d)
         self.assertEqual(str(g),"b yes;\na no;\n")
+        self.assertEqual(g.makeString(firstLevel=True),"b yes;\na no;\n")
 
     def testMakeDictionaryRedirect(self):
         val="""
@@ -193,8 +195,10 @@ c {
         self.assertEqual(str(g),"a yes;\n")
         g=FoamFileGenerator({'a':BoolProxy(True,textual="on")})
         self.assertEqual(str(g),"a yes;\n")
-
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorTest,"test"))
+        g=FoamFileGenerator(BoolProxy(True))
+        self.assertEqual(str(g),"yes")
+        g=FoamFileGenerator(BoolProxy(False))
+        self.assertEqual(str(g),"no")
 
 class FoamFileGeneratorUnparsed(unittest.TestCase):
     def testUnparsed(self):
@@ -212,8 +216,6 @@ class FoamFileGeneratorUnparsed(unittest.TestCase):
         g=FoamFileGenerator({"a":Unparsed(text),"b":"nix"})
         self.assertEqual(str(g),"a "+text+";\nb nix;\n")
 
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorUnparsed,"test"))
-
 class FoamFileGeneratorUnparsedList(unittest.TestCase):
     def testUnparsedList(self):
         content="1\n2\n3\n4\n5\n6"
@@ -227,8 +229,6 @@ class FoamFileGeneratorUnparsedList(unittest.TestCase):
         content="1\n2\n3\n4\n5\n6"
         g=FoamFileGenerator({"a":UnparsedList(6,content),"b":"nix"})
         self.assertEqual(str(g),"a\n  6 ("+content+"\n  );\nb nix;\n")
-
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorUnparsedList,"test"))
 
 class FoamFileGeneratorRoundtrip(unittest.TestCase):
     def setUp(self):
@@ -247,8 +247,6 @@ class FoamFileGeneratorRoundtrip(unittest.TestCase):
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
 
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtrip,"test"))
-
 class FoamFileGeneratorRoundtrip2(unittest.TestCase):
     def setUp(self):
         self.theFile=mktemp()
@@ -264,8 +262,6 @@ class FoamFileGeneratorRoundtrip2(unittest.TestCase):
         del test
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
-
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtrip2,"test"))
 
 class FoamFileGeneratorRoundtripZipped(unittest.TestCase):
     def setUp(self):
@@ -286,8 +282,6 @@ class FoamFileGeneratorRoundtripZipped(unittest.TestCase):
         test3=ParsedParameterFile(self.theFile+".gz")
         self.assertEqual(data1,test3.content)
 
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtripZipped,"test"))
-
 class FoamFileGeneratorRoundtrip2(unittest.TestCase):
     def setUp(self):
         self.theFile=mktemp()
@@ -306,8 +300,6 @@ class FoamFileGeneratorRoundtrip2(unittest.TestCase):
         del test
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
-
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtrip2,"test"))
 
 class FoamFileGeneratorRoundtrip3(unittest.TestCase):
     def setUp(self):
@@ -329,8 +321,6 @@ class FoamFileGeneratorRoundtrip3(unittest.TestCase):
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
 
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtrip3,"test"))
-
 class FoamFileGeneratorRoundtrip4(unittest.TestCase):
     def setUp(self):
         self.theFile=mktemp()
@@ -346,8 +336,6 @@ class FoamFileGeneratorRoundtrip4(unittest.TestCase):
         del test
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
-
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtrip4,"test"))
 
 class FoamFileGeneratorRoundtrip5(unittest.TestCase):
     def setUp(self):
@@ -373,8 +361,6 @@ class FoamFileGeneratorRoundtrip5(unittest.TestCase):
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
 
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtrip5,"test"))
-
 class FoamFileGeneratorRoundtripLongList(unittest.TestCase):
     def setUp(self):
         self.theFile=mktemp()
@@ -395,8 +381,6 @@ class FoamFileGeneratorRoundtripLongList(unittest.TestCase):
         del test
         test2=ParsedParameterFile(self.theFile,listLengthUnparsed=100)
         self.assertEqual(data1,test2.content)
-
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtripLongList,"test"))
 
 class FoamFileGeneratorRoundtripLongList2(unittest.TestCase):
     def setUp(self):
@@ -420,13 +404,21 @@ class FoamFileGeneratorRoundtripLongList2(unittest.TestCase):
         test2=ParsedParameterFile(self.theFile,listLengthUnparsed=100)
         self.assertEqual(data1,test2.content)
 
-theSuite.addTest(unittest.makeSuite(FoamFileGeneratorRoundtripLongList2,"test"))
-
 class MakeStringFunction(unittest.TestCase):
     def testSingleTuple(self):
         self.assertEqual(makeString( (2,3) ),"  2   3 ")
+
     def testSingleTupleProxy(self):
         self.assertEqual(makeString( TupleProxy((2,3)) ),"  2   3 ")
+
+    def testTupleWithList(self):
+        self.assertEqual(makeString( (2,[3,4]) ),"  2    (\n    3\n    4\n  )\n")
+
+    def testTupleWithDict(self):
+        self.assertEqual(makeString( (2,{"a":2}) ),"  2 {\n    a 2;\n  } ")
+
+    def testTupleInDict(self):
+        self.assertEqual(makeString({"a":(2,3)} ),"a     2     3 ;\n")
 
     def testSingleList(self):
         self.assertEqual(makeString( [2,3] ),"(\n  2\n  3\n)\n")
@@ -446,7 +438,10 @@ class MakeStringFunction(unittest.TestCase):
         p1=FoamStringParser('test  nonuniform 0();')
         self.assertEqual(str(p1),"test nonuniform 0\n(\n)\n;\n")
 
-theSuite.addTest(unittest.makeSuite(MakeStringFunction,"test"))
+class QuotedString(unittest.TestCase):
+    def testSingleQuote(self):
+        self.assertEqual(makeString( "heres ; nothing" ),'"heres ; nothing"')
+        self.assertEqual(makeString( 'heres ; "nothing"' ),"'heres ; \"nothing\"'")
 
 class IncludeFilesRoundTrip(unittest.TestCase):
     def setUp(self):
@@ -491,9 +486,6 @@ class IncludeFilesRoundTrip(unittest.TestCase):
                 else:
                     self.compareData(d1[k],d2[k])
 
-if foamVersionNumber()>=(1,6):
-    theSuite.addTest(unittest.makeSuite(IncludeFilesRoundTrip,"test"))
-
 class CodeStreamRoundTrip(unittest.TestCase):
     def setUp(self):
         self.theDir=mkdtemp()
@@ -514,5 +506,8 @@ class CodeStreamRoundTrip(unittest.TestCase):
         test2=ParsedParameterFile(self.theFile)
         self.assertEqual(data1,test2.content)
 
-if foamVersionNumber()>=(2,):
-    theSuite.addTest(unittest.makeSuite(CodeStreamRoundTrip,"test"))
+class ErrorRaised(unittest.TestCase):
+    def testUnknownType(self):
+        with pytest.raises(FatalErrorPyFoamException):
+            g=FoamFileGenerator(set())
+            self.assertEqual(str(g),"yes")
