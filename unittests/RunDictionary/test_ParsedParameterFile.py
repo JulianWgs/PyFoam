@@ -1,4 +1,5 @@
 import unittest
+import pytest
 
 from PyFoam.FoamInformation import oldTutorialStructure,foamTutorials,foamVersionNumber,foamFork
 from os import path,remove
@@ -78,7 +79,6 @@ def potentialCylinderTutorial():
         prefix=path.join(prefix,"basic","potentialFoam")
     return path.join(prefix,"cylinder")
 
-theSuite=unittest.TestSuite()
 
 class FoamStringParserTest(unittest.TestCase):
 
@@ -452,7 +452,6 @@ nix "a=3+x;b=4;";
     def testInputMode4(self):
         p1=FoamStringParser('#inputMode default\n')
 
-theSuite.addTest(unittest.makeSuite(FoamStringParserTest,"test"))
 
 class ParsedParameterDictionaryMacroExpansion(unittest.TestCase):
     def testSimpleSubst(self):
@@ -535,7 +534,6 @@ c ${${b}}; // returns 10, since $b returns 'a', and $a returns 10
         self.assertEqual(p1["b"],"a")
         self.assertEqual(p1["c"],"${${b}}")
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterDictionaryMacroExpansion,"test"))
 
 class ParsedBoundaryDictTest(unittest.TestCase):
     def setUp(self):
@@ -550,7 +548,6 @@ class ParsedBoundaryDictTest(unittest.TestCase):
         self.assertEqual(len(test.content),4)
         self.assert_("inlet" in test)
 
-theSuite.addTest(unittest.makeSuite(ParsedBoundaryDict,"test"))
 
 class ParsedParameterFileTest(unittest.TestCase):
     def setUp(self):
@@ -589,7 +586,6 @@ class ParsedParameterFileTest(unittest.TestCase):
         self.assertEqual(len(test),nrTurbModels)
         self.assertEqual(test[model],"kEpsilon")
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest,"test"))
 
 class ParsedParameterFileTest2(unittest.TestCase):
     def setUp(self):
@@ -609,7 +605,6 @@ class ParsedParameterFileTest2(unittest.TestCase):
         test=ParsedParameterFile(self.theFile)
         self.assertEqual(len(test["boundaryField"]),5)
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest2,"test"))
 
 class ParsedParameterFileTest3(unittest.TestCase):
     def setUp(self):
@@ -631,7 +626,6 @@ class ParsedParameterFileTest3(unittest.TestCase):
         if foamVersionNumber()<(2,):
             self.assertEqual(len(test["boundaryField"]["floor"]["value"].val),400)
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest3,"test"))
 
 class ParsedParameterFileTest4(unittest.TestCase):
     def setUp(self):
@@ -657,7 +651,6 @@ class ParsedParameterFileTest4(unittest.TestCase):
         else:
             self.assertEqual(len(test["divSchemes"]["div(phi,ft_b_h_hu)"][2]),divSchemes)
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest4,"test"))
 
 class ParsedParameterFileTest5(unittest.TestCase):
     def setUp(self):
@@ -684,7 +677,6 @@ class ParsedParameterFileTest5(unittest.TestCase):
         else:
             self.assertEqual(test["internalField"].value().__class__,SymmTensor)
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest5,"test"))
 
 class ParsedParameterFileTest6(unittest.TestCase):
     def setUp(self):
@@ -703,9 +695,6 @@ class ParsedParameterFileTest6(unittest.TestCase):
             test=ParsedParameterFile(self.theFile)
         except PyFoamParserError:
             pass
-
-if foamVersionNumber()<(1,5):
-    theSuite.addTest(unittest.makeSuite(ParsedParameterFileTest6,"test"))
 
 class ParsedParameterFileIncludeTest(unittest.TestCase):
     def setUp(self):
@@ -726,9 +715,6 @@ class ParsedParameterFileIncludeTest(unittest.TestCase):
         self.assertEqual("upperWall" in test["boundaryField"],True)
         self.assertEqual(test["boundaryField"]["upperWall"]["type"],"slip")
 
-if foamVersionNumber()>=(1,6):
-    theSuite.addTest(unittest.makeSuite(ParsedParameterFileIncludeTest,"test"))
-
 class ParsedParameterFileCodeStreamTest(unittest.TestCase):
     def setUp(self):
         self.fileName=path.join(potentialCylinderTutorial(),"system","controlDict")
@@ -747,9 +733,6 @@ class ParsedParameterFileCodeStreamTest(unittest.TestCase):
             key="difference"
             code="code"
         self.assertEqual(type(test["functions"][key][code]),Codestream)
-
-if foamVersionNumber()>=(2,):
-    theSuite.addTest(unittest.makeSuite(ParsedParameterFileCodeStreamTest,"test"))
 
 class ParsedParameterFileRedirectDictionary(unittest.TestCase):
     def setUp(self):
@@ -825,7 +808,6 @@ dictC {
         self.assertEqual(data["dictA"]["f"],17)
         self.assertEqual(data["dictA"]["f"],17)
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileRedirectDictionary,"test"))
 
 class ParsedParameterFileDictionaryNested(unittest.TestCase):
     def setUp(self):
@@ -869,7 +851,6 @@ dictA {
             data["dictA"]["dictB"]["dictC"]["dictD"]["e"],
             data["dictA"]["dictB"]["dictC"]["d"])
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileDictionaryNested,"test"))
 
 class ParsedParameterFileDictionaryNestedCopy(unittest.TestCase):
     def setUp(self):
@@ -899,7 +880,6 @@ dictB {
         self.assertEqual(data["dictA"]["a"],1)
         self.assertEqual(42,data["dictB"]["d"]["a"])
 
-theSuite.addTest(unittest.makeSuite(ParsedParameterFileDictionaryNestedCopy,"test"))
 
 class WriteParameterFileTest(unittest.TestCase):
     def setUp(self):
@@ -936,7 +916,6 @@ c 4;
 
 """)
 
-theSuite.addTest(unittest.makeSuite(WriteParameterFileTest,"test"))
 
 class ReadIncludeAndMacroExpansionTest(unittest.TestCase):
     def setUp(self):
@@ -967,8 +946,6 @@ class ReadIncludeAndMacroExpansionTest(unittest.TestCase):
         self.assertEqual(str(kFile["boundaryField"]["motorBikeGroup"]["value"]),"uniform 0.24")
 
 
-theSuite.addTest(unittest.makeSuite(WriteParameterFileTest,"test"))
-
 class RegexpFindingTests(unittest.TestCase):
     def setUp(self):
         self.parse=FoamStringParser("""
@@ -981,3 +958,29 @@ abValue 3;
         self.assertEqual(self.parse["aValue"],1)
         self.assertEqual(self.parse["bValue"],2)
         self.assertEqual(self.parse["abValue"],3)
+
+class DictLikeParserBehaviour(unittest.TestCase):
+    def setUp(self):
+        self.data=FoamStringParser("""
+a 1;
+b 2;
+c 3;
+""")
+
+    def testHasItem(self):
+        self.assert_("a" in self.data)
+
+    def testGetItem(self):
+        self.assertEqual(self.data["a"],1)
+
+    def testSetItem(self):
+        self.data["a"]=-1
+        self.assertEqual(self.data["a"],-1)
+
+    def testDelItem(self):
+        del self.data["a"]
+        with pytest.raises(KeyError):
+            self.assertEqual(self.data["a"],-1)
+
+    def testIter(self):
+        self.assertEqual([k for k in self.data],["a","b","c"])
