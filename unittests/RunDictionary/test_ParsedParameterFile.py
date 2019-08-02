@@ -79,6 +79,15 @@ def potentialCylinderTutorial():
         prefix=path.join(prefix,"basic","potentialFoam")
     return path.join(prefix,"cylinder")
 
+def planarPoiseuilleTutorial():
+    prefix=foamTutorials()
+
+    return path.join(prefix,"incompressible","pimpleFoam","laminar","planarPoiseuille")
+
+def backwardFacingStep2DTutorial():
+    prefix=foamTutorials()
+
+    return path.join(prefix,"incompressible","simpleFoam","backwardFacingStep2D")
 
 class FoamStringParserTest(unittest.TestCase):
 
@@ -714,6 +723,30 @@ class ParsedParameterFileIncludeTest(unittest.TestCase):
         self.assertEqual(test["pressure"],0)
         self.assertEqual("upperWall" in test["boundaryField"],True)
         self.assertEqual(test["boundaryField"]["upperWall"]["type"],"slip")
+
+class ParsedParameterFileIncludeFuncTest(unittest.TestCase):
+    def setUp(self):
+        self.fileName=path.join(planarPoiseuilleTutorial(),"system","controlDict")
+
+    def tearDown(self):
+        pass
+
+    def testBasicIncludeFunc(self):
+        test=ParsedParameterFile(self.fileName,doMacroExpansion=True)
+        self.assertEqual(test["functions"]["probes"]["fields"],["U"])
+        self.assertEqual(test["functions"]["probes"]["writeControl"],"timeStep")
+
+class ParsedParameterFileIncludeFuncQuotedTest(unittest.TestCase):
+    def setUp(self):
+        self.fileName=path.join(backwardFacingStep2DTutorial(),"system","controlDict")
+
+    def tearDown(self):
+        pass
+
+    def testBasicIncludeFunc(self):
+        test=ParsedParameterFile(self.fileName,doMacroExpansion=True)
+        self.assertEqual(test["functions"]["sampleCp"]["fields"],["cp"])
+        self.assertEqual(test["functions"]["wallShearStress"]["writeControl"],"writeTime")
 
 class ParsedParameterFileCodeStreamTest(unittest.TestCase):
     def setUp(self):
