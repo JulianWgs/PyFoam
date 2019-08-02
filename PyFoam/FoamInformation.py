@@ -37,6 +37,16 @@ def foamEtc():
 
     return path.join(getPathFromEnviron("WM_PROJECT_DIR"),"etc")
 
+def foamCaseDicts():
+    """:return: the caseDicts-directory of the distro"""
+
+    return path.join(foamEtc(),"caseDicts")
+
+def foamPostProcessing():
+    """:return: the caseDicts/postProcessing-directory of the distro"""
+
+    return path.join(foamCaseDicts(),"postProcessing")
+
 def foamMPI():
     """:return: the used MPI-Implementation"""
     if "WM_MPLIB" not in environ:
