@@ -751,9 +751,13 @@ class FoamFileParser(PlyParser):
             fName=path.join(self.directory(),p[2][1:-1])
 
             if p[1]=="includeFunc":
-                includeName=p[2]
-                if includeName[0]=='"' and includeName[-1]=='"':
-                    includeName=includeName[1:-1]
+                funcName=p[2]
+                if funcName[0]=='"' and funcName[-1]=='"':
+                    funcName=funcName[1:-1].strip()
+                includeName=funcName
+                if funcName[-1]==")" and funcName.find("(")>0:
+                    includeName=includeName[:includeName.find("(")]
+                    raise PyFoamParserError("Parameters for #includeFunc not implemented")
 
             if p[1]=="includeEtc":
                 from PyFoam.FoamInformation import foamEtc
@@ -788,7 +792,7 @@ class FoamFileParser(PlyParser):
                                              doMacroExpansion=self.doMacros)
                 into=self.dictStack[-1]
                 if p[1]=="includeFunc":
-                    into[includeName]=data.content
+                    into[funcName]=data.content
                 else:
                     for k in data:
                         into[k]=data[k]

@@ -127,7 +127,7 @@
 *** Additional directories in =FoamInformation=
     Two functions =foamCaseDicts()= and =foamPostProcessing()= have
     been added that return the paths to these directories inside
-    =§FOAM_ETC=
+    =$FOAM_ETC=
 ** Bug fixes
 *** With dynamic plots names with =_slave= are problematic
     This made the slave plots that had =_slave= in the name fail
