@@ -64,6 +64,7 @@ class ParsedParameterFile(FileBasisBackup):
         FileBasisBackup.__init__(self,
                                  name,
                                  backup=backup,
+                                 useBinary=True,
                                  createZipped=createZipped)
         self.debug=debug
         self.boundaryDict=boundaryDict

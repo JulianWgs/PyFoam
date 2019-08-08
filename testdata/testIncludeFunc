@@ -1,0 +1,6 @@
+// -*- c++ -*-
+
+#includeFunc wallShearStress
+#includeFunc mag(U)
+//#includeFunc flowRateFaceZone(name=fZone1)
+//#includeFunc flowRateFaceZone(orientedFields=(phiAlpha),name=fZone1)

@@ -1017,3 +1017,14 @@ c 3;
 
     def testIter(self):
         self.assertEqual([k for k in self.data],["a","b","c"])
+
+class ReadBinaryFiles(unittest.TestCase):
+    def testReadBinaryFile1(self):
+        uFile=ParsedParameterFile(path.join("testdata","U.binary"))
+        assert uFile["boundaryField"]["fixedWalls"]["type"]=="noSlip"
+        assert uFile["internalField"].isBinary()
+
+    def testReadBinaryFile2(self):
+        pFile=ParsedParameterFile(path.join("testdata","p.binary"))
+        assert pFile["boundaryField"]["fixedWalls"]["type"]=="zeroGradient"
+        assert pFile["internalField"].isBinary()
