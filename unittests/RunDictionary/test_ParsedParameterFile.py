@@ -7,6 +7,7 @@ from tempfile import mktemp,mkdtemp
 from shutil import copyfile,rmtree,copytree
 
 from PyFoam.RunDictionary.ParsedParameterFile import FoamStringParser,ParsedParameterFile,ParsedBoundaryDict,DictProxy,TupleProxy,PyFoamParserError,WriteParameterFile
+from PyFoam.Error import FatalErrorPyFoamException
 
 from PyFoam.Basics.FoamFileGenerator import Vector,Dimension,Field,Tensor,SymmTensor,Codestream
 
@@ -461,6 +462,30 @@ nix "a=3+x;b=4;";
     def testInputMode4(self):
         p1=FoamStringParser('#inputMode default\n')
 
+
+class CheckDuplicateHandling(unittest.TestCase):
+    def setUp(self):
+        self.txt="""
+a 1;
+b 2;
+a 3;
+"""
+
+    def testNoCheckDuplicate(self):
+        p1=FoamStringParser(self.txt)
+        assert p1["a"]==3
+
+    def testCheckDuplicate(self):
+        p1=FoamStringParser(self.txt,
+                            duplicateCheck=True)
+        assert p1["a"]==3
+
+    def testCheckDuplicateFail(self):
+        with pytest.raises(FatalErrorPyFoamException):
+            p1=FoamStringParser(self.txt,
+                                duplicateCheck=True,
+                                duplicateFail=True)
+            assert p1["a"]==3
 
 class ParsedParameterDictionaryMacroExpansion(unittest.TestCase):
     def testSimpleSubst(self):
