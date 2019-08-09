@@ -132,6 +132,9 @@
     Two functions =foamCaseDicts()= and =foamPostProcessing()= have
     been added that return the paths to these directories inside
     =$FOAM_ETC=
+*** =BoolProxy= now works correctly with ~!=~
+    Added a method =__ne__= so that the results of the ~!=~ operator
+    are consistent with ~==~
 ** Bug fixes
 *** With dynamic plots names with =_slave= are problematic
     This made the slave plots that had =_slave= in the name fail

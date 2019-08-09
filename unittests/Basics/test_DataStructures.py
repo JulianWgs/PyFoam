@@ -142,11 +142,11 @@ class BoolProxyTest(unittest.TestCase):
 
     def testEqual(self):
         v=BoolProxy(True)
-        self.assertEqual(v,True)
-        self.assertEqual(True,v)
+        assert v==True
+        assert True==v
         v=BoolProxy(False)
-        self.assertEqual(v,False)
-        self.assertEqual(False,v)
+        assert v==False
+        assert False==v
         v2=BoolProxy(False)
         self.assertEqual(v,v2)
         v2=BoolProxy(True)
@@ -157,6 +157,14 @@ class BoolProxyTest(unittest.TestCase):
         self.assertEqual(v2,"on")
         self.assertEqual("on",v2)
         self.assertNotEqual(v,"foo")
+
+    def testNotEqual(self):
+        v=BoolProxy(True)
+        assert v!=False
+        assert False!=v
+        v=BoolProxy(False)
+        assert v!=True
+        assert True!=v
 
     def testEqualNormalBool(self):
         t=BoolProxy(True)

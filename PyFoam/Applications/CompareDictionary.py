@@ -10,7 +10,7 @@ import sys
 from .PyFoamApplication import PyFoamApplication
 
 from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile,PyFoamParserError
-from PyFoam.Basics.DataStructures import DictProxy,Dimension,Tensor,SymmTensor,Vector,Field,TupleProxy
+from PyFoam.Basics.DataStructures import DictProxy,Dimension,Tensor,SymmTensor,Vector,Field,TupleProxy,BoolProxy
 from PyFoam.Basics.FoamFileGenerator import makeString
 
 from PyFoam.Error import error,warning
@@ -165,7 +165,7 @@ equivalents to the other files are searched there.
             self.pling=True
         elif type(src) in [tuple,list,TupleProxy]:
             self.compareIterable(src,dst,depth,name)
-        elif isinstance(src,(str,float)+integer_types) or src==None:
+        elif isinstance(src,(str,float,bool,BoolProxy)+integer_types) or src==None:
             self.comparePrimitive(src,dst,depth,name)
         elif src.__class__ in [Dimension,Tensor,SymmTensor,Vector]:
             self.comparePrimitive(src,dst,depth,name)

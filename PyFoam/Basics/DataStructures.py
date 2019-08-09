@@ -389,6 +389,9 @@ class BoolProxy(object):
             # raise TypeError("Can't compare BoolProxy with "+str(type(o)))
             return self.val==o
 
+    def __ne__(self,o):
+        return not self.__eq__(o)
+
 class DictRedirection(object):
     """This class is in charge of handling redirections to other directories"""
     def __init__(self,fullCopy,reference,name):
