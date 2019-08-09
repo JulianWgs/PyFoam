@@ -119,6 +119,10 @@
     with =alternateAxis=
 *** =pyFoamBinarySize.py= now calculates documentation size as well
     If there is =html= documentation then this is counted as well
+*** =pyFoamCompareDictionary.py= allows specification of significant digits
+    When comparing numbers now the number of significant digits can be
+    specified. This only works for single numbers. Not compound types
+    like lists and vectors
 ** Enhancements to the Library
 *** =progress=-data is automatically converted to =float=
     When using format-strings for the =progress=-entry then the

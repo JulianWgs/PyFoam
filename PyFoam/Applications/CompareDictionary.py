@@ -61,12 +61,18 @@ equivalents to the other files are searched there.
                                default=False,
                                dest="debug",
                                help="Debug the comparing process")
+        self.parser.add_option("--significant-digits",
+                               action="store",
+                               type="int",
+                               default=6,
+                               dest="digits",
+                               help="How many digits of the bigger number should be similar if two numbers are compared. Default: %default")
         self.parser.add_option("--long-field-threshold",
                                action="store",
                                type="int",
                                default=None,
                                dest="longlist",
-                               help="Fields that are longer than this won't be parsed, but read into memory (and compared as strings)")
+                               help="Fields that are longer than this won't be parsed, but read into memory (and compared as strings). Default: unset")
 
         CommonParserOptions.addOptions(self)
 
@@ -190,7 +196,15 @@ equivalents to the other files are searched there.
                 print_("nonuniform - field not printed")
 
     def comparePrimitive(self,src,dst,depth,name):
-        if src!=dst:
+        different=False
+        numTypes=(float,)+integer_types
+        if isinstance(src,numTypes) and isinstance(dst,numTypes):
+            tol=max(abs(src),abs(dst))*(10**-self.opts.digits)
+            if abs(src-dst)>tol:
+                different=True
+        elif src!=dst:
+            different=True
+        if different:
             print_(f.diff+">><<",name,": Differs"+f.reset+"\n"+f.src+">>Source:"+f.reset+"\n",src,"\n"+f.dst+"<<Destination:"+f.reset+"\n",dst)
             self.pling=True
 
