@@ -32,7 +32,7 @@ class TimeLineAnalyzer(LogLineAnalyzer):
     def notifyNewTime(self,m):
         try:
             self.notify(float(m.group(2)))
-            if type(self.parent.time)==float:
+            if self.parent is not None and type(self.parent.time)==float:
                 self.writeProgress("t = %10g" % self.parent.time)
 
         except ValueError:
