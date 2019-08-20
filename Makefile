@@ -33,3 +33,9 @@ ReleaseNotes.md: ReleaseNotes
 
 ReleaseNotes.html: ReleaseNotes
 	pandoc --from=org --to=html ReleaseNotes -o ReleaseNotes.html
+
+tests:
+	py.test
+
+coverage:
+	py.test --cov=PyFoam --cov-report=html
