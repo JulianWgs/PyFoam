@@ -5,7 +5,7 @@ docuold:
 #	epydoc --output=doc PyFoam --parse-only -v --include-log --css=grayscale
 	epydoc --output=doc.old PyFoam --introspect-only -v --include-log --inheritance=grouped --show-imports --include-log --graph=umlclasstree
 
-docu:
+docu: README.rst
 	sphinx-apidoc --separate -o doc/api PyFoam
 	(cd doc; make html)
 
@@ -33,6 +33,9 @@ ReleaseNotes.md: ReleaseNotes
 
 ReleaseNotes.html: ReleaseNotes
 	pandoc --from=org --to=html ReleaseNotes -o ReleaseNotes.html
+
+README.rst: README
+	pandoc --from=org --to=rst README -o README.rst
 
 tests:
 	py.test
