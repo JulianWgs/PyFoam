@@ -1,12 +1,14 @@
 # Table of Contents
 
-1.  [What it is](#orge5d1e8f)
-2.  [Installation](#org6e8653b)
-3.  [License](#orgf58afc7)
-4.  [Contributors](#org8ff701e)
+1.  [What it is](#org8e27d27)
+2.  [Installation](#org5380b22)
+3.  [License](#orgf26070d)
+4.  [Contributors](#org0388d7f)
+5.  [Further reading](#org820f59e)
+6.  [This document](#orgca16204)
 
 
-<a id="orge5d1e8f"></a>
+<a id="org8e27d27"></a>
 
 # What it is
 
@@ -34,7 +36,7 @@ More information is found on [the OpenFOAM Wiki](http://openfoamwiki.net/index.p
 Introductory presentations on PyFoam can be found there
 
 
-<a id="org6e8653b"></a>
+<a id="org5380b22"></a>
 
 # Installation
 
@@ -45,7 +47,7 @@ The easiest way to install PyFoam is the Python package-manager `pip`:
 which will install PyFoam
 
 
-<a id="orgf58afc7"></a>
+<a id="orgf26070d"></a>
 
 # License
 
@@ -57,7 +59,7 @@ for a description of the GNU General Public License terms under which
 you can copy the files.
 
 
-<a id="org8ff701e"></a>
+<a id="org0388d7f"></a>
 
 # Contributors
 
@@ -72,3 +74,28 @@ The people who contributed to PyFoam (If I forgot someone: tell me):
 -   Bruno Santos
 -   Marc Immer
 -   Oliver Borm
+
+
+<a id="org820f59e"></a>
+
+# Further reading
+
+These documents give further information
+
+-   **ReleaseNotes:** list of the changes between versions (newest
+    versions are on top).
+-   **DeveloperNotes:** document with information for people who want to
+    contribute to `PyFoam`
+
+For information on the usage see the presentations on [the `PyFOAM`
+page on the OpenFOAM-Wiki](https://openfoamwiki.net/index.php/Contrib_PyFoam)
+
+
+<a id="orgca16204"></a>
+
+# This document
+
+The original source of this document is `README.org`. The
+`README.md` (to which the `README` links) is automatically generated
+and should **not** be edited. The reason for this setup is that most
+Web-GUIs for VCS insist on Markdown as a markup language

@@ -290,9 +290,17 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 
-autodoc_default_flags=['members',
-#                       'undoc-members',
-                       'private-members',
-                       'special-members',
-#                       'inherited-members',
-                       'show-inheritance']
+autodoc_default_options={
+    "members"           : True,
+    "private-members"   : True,
+    "undoc-members"     : True,
+    "special-members"   : True,
+    "show-inheritance"  : True
+}
+
+# autodoc_default_flags=['members',
+# #                       'undoc-members',
+#                        'private-members',
+#                        'special-members',
+# #                       'inherited-members',
+#                        'show-inheritance']

@@ -48,6 +48,23 @@
  - Marc Immer
  - Oliver Borm
 
+* Further reading
+  These documents give further information
+
+  - ReleaseNotes :: list of the changes between versions (newest
+                    versions are on top).
+  - DeveloperNotes :: document with information for people who want to
+                      contribute to =PyFoam=
+
+  For information on the usage see the presentations on [[https://openfoamwiki.net/index.php/Contrib_PyFoam][the =PyFOAM=
+  page on the OpenFOAM-Wiki]]
+
+* This document
+  The original source of this document is =README.org=. The
+  =README.md= (to which the =README= links) is automatically generated
+  and should *not* be edited. The reason for this setup is that most
+  Web-GUIs for VCS insist on Markdown as a markup language
+
 # Local Variables:
 # eval: (add-hook 'after-save-hook 'org-md-export-to-markdown t t)
 # End:

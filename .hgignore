@@ -4,3 +4,12 @@ syntax: glob
 .cache
 htmlcov
 .coverage
+
+*.py.1
+doc/api
+doc/_build
+dist
+build
+PyFoam.egg-info
+
+venv*

@@ -1,0 +1,45 @@
+# -*- org -*-
+#+TITLE: How to contribute to PyFoam
+
+* This document
+* Used language
+* Setup for development
+  It is recommended to set up a "clean" environment for
+  development. This makes sure that by accident no libraries are used
+  that are "by accident" on the developer system but not present
+  otherwise
+
+  The following example assumes that you want to set up an environment
+  for Python 3.6. First set up the virtual environment
+
+: python3.6 -m venv venv36
+
+  then activate it (this has to be done every time to work in this
+  environment) with
+
+: . ./venv36/bin/activate
+
+  and install the requirements that =PyFoam= absolutely needs with
+
+: pip install -r requirements.txt
+
+  Lastly make sure that the current sources are used instead of a
+  pre-installed =PyFoam= with
+
+: . ./setDevelopmentPath.sh
+
+  (this is sufficient if you want to use the current sources with the
+  system-Python)
+
+** Additional software
+   To assist the development with
+: pip install -r requirements_development.txt
+   you can install additional libraries for unit-testing and
+   documentation generation
+
+   Additional software that is used by some parts of PyFoam can be installed with
+: pip install -r requirements_additional.txt
+
+# Local Variables:
+# eval: (add-hook 'after-save-hook 'org-md-export-to-markdown t t)
+# End:
