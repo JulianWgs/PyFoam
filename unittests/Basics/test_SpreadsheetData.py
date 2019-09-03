@@ -50,7 +50,7 @@ class SpreadsheetDataTest(unittest.TestCase):
         sp1=SpreadsheetData(data=data1,names=names1)
         sp1.append("test",[i*i for i in range(len(data1))])
         self.assertEqual(len(sp1.names()),len(names1)+1)
-        self.assert_("test" in sp1.names())
+        self.assertTrue("test" in sp1.names())
 
     def testSpreadsheetDataAddTimes(self):
         sp1=SpreadsheetData(data=data1,names=names1)
@@ -60,13 +60,13 @@ class SpreadsheetDataTest(unittest.TestCase):
         self.assertAlmostEqual(sp1.data["p1"][2],3)
         sp1.addTimes([2.5],interpolate=False)
         self.assertEqual(len(sp1.data),8)
-        self.assert_(numpy.isnan(sp1.data["p1"][4]))
+        self.assertTrue(numpy.isnan(sp1.data["p1"][4]))
         sp1.addTimes([-1],interpolate=True,invalidExtend=True)
         self.assertEqual(len(sp1.data),9)
         self.assertAlmostEqual(sp1.data["p1"][0],0)
         sp1.addTimes([10],interpolate=True,invalidExtend=False)
         self.assertEqual(len(sp1.data),10)
-        self.assert_(numpy.isnan(sp1.data["p1"][-1]))
+        self.assertTrue(numpy.isnan(sp1.data["p1"][-1]))
         sp1.addTimes([0,1,2],interpolate=True)
         self.assertEqual(len(sp1.data),10)
         sp1.addTimes([-2,2.37,20],interpolate=True)
@@ -86,9 +86,9 @@ class SpreadsheetInterpolationTest(unittest.TestCase):
     def testSpreadsheetDataInterpolation(self):
         sp=SpreadsheetData(data=data3,names=names3)
         self.assertAlmostEqual(sp(-1,"val",invalidExtend=True),0)
-        self.assert_(numpy.isnan(sp(-1,"val")))
+        self.assertTrue(numpy.isnan(sp(-1,"val")))
         self.assertAlmostEqual(sp(10,"val",invalidExtend=True),81)
-        self.assert_(numpy.isnan(sp(10,"val")))
+        self.assertTrue(numpy.isnan(sp(10,"val")))
         self.assertAlmostEqual(sp(1,"val"),1)
         self.assertAlmostEqual(sp(1.5,"val"),2.5)
         self.assertAlmostEqual(sp(5,"val"),25)
@@ -97,7 +97,7 @@ class SpreadsheetInterpolationTest(unittest.TestCase):
         self.assertAlmostEqual(sp(8.9,"t"),8.9)
 
         self.assertAlmostEqual(sp(1,"val",noInterpolation=True),1)
-        self.assert_(numpy.isnan(sp(1.5,"val",noInterpolation=True)))
+        self.assertTrue(numpy.isnan(sp(1.5,"val",noInterpolation=True)))
 
     def testSpreadsheetDataOuterLimitNoInterpolate(self):
         sp=SpreadsheetData(data=data3,names=names3)
@@ -109,9 +109,9 @@ class SpreadsheetInterpolationTest(unittest.TestCase):
     def testSpreadsheetDataInterpolationWithString(self):
         sp=SpreadsheetData(data=data3a,names=names3a)
         self.assertAlmostEqual(sp(-1,"val",invalidExtend=True),0)
-        self.assert_(numpy.isnan(sp(-1,"val")))
+        self.assertTrue(numpy.isnan(sp(-1,"val")))
         self.assertAlmostEqual(sp(10,"val",invalidExtend=True),81)
-        self.assert_(numpy.isnan(sp(10,"val")))
+        self.assertTrue(numpy.isnan(sp(10,"val")))
         self.assertAlmostEqual(sp(1,"val"),1)
         self.assertAlmostEqual(sp(1.5,"val"),2.5)
         self.assertAlmostEqual(sp(5,"val"),25)
@@ -120,7 +120,7 @@ class SpreadsheetInterpolationTest(unittest.TestCase):
         self.assertAlmostEqual(sp(8.9,"t"),8.9)
 
         self.assertAlmostEqual(sp(1,"val",noInterpolation=True),1)
-        self.assert_(numpy.isnan(sp(1.5,"val",noInterpolation=True)))
+        self.assertTrue(numpy.isnan(sp(1.5,"val",noInterpolation=True)))
 
         self.assertEqual(sp(-1,"descr",invalidExtend=True),b('val_0'))
         self.assertEqual(sp(-1,"descr"),'')

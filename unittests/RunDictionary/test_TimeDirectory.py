@@ -1,3 +1,4 @@
+import pytest
 import unittest
 
 from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
@@ -46,22 +47,24 @@ class TimeDirectoryTest(unittest.TestCase):
     def tearDown(self):
         rmtree(self.theDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testTimeDirectoryBasicContainerStuff(self):
         test=SolutionDirectory(self.theFile)["0"]
         self.assertEqual(len(test),4)
-        self.assert_(gammaName() in test)
-        self.assert_("nix" not in test)
+        self.assertTrue(gammaName() in test)
+        self.assertTrue("nix" not in test)
         tf=test["U"]
         self.assertEqual(type(tf),SolutionFile)
-        self.assert_(FileBasis in tf.__class__.__mro__)
+        self.assertTrue(FileBasis in tf.__class__.__mro__)
         self.assertRaises(KeyError,test.__getitem__,"nix")
         self.assertRaises(TypeError,test.__getitem__,42)
         lst=[]
         for v in test:
             lst.append(v.baseName())
-        self.assert_(gammaName() in lst)
+        self.assertTrue(gammaName() in lst)
         self.assertEqual(len(lst),len(test))
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testTimeDirectoryAdding(self):
         test=SolutionDirectory(self.theFile)["0"]
         self.assertEqual(len(test),4)
@@ -74,6 +77,7 @@ class TimeDirectoryTest(unittest.TestCase):
         del test["U2"]
         self.assertEqual(len(test),4)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testTimeDirectoryCreating(self):
         self.assertEqual(len(SolutionDirectory(self.theFile)),1)
         test=TimeDirectory(self.theFile,"42",create=True)
@@ -99,6 +103,7 @@ class TimeDirectoryTestZipped(unittest.TestCase):
     def tearDown(self):
         rmtree(self.theDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testTimeReplacingZippedFile(self):
         test=SolutionDirectory(self.theFile)["0"]
         self.assertEqual(len(test),4)
@@ -127,6 +132,7 @@ class TimeDirectoryTestCopy(unittest.TestCase):
     def tearDown(self):
         rmtree(self.theDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testTimeCopy(self):
         sol=SolutionDirectory(self.theFile)
         self.assertEqual(len(sol),1)

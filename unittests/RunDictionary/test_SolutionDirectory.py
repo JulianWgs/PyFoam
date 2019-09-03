@@ -1,7 +1,10 @@
+import pytest
 import unittest
 
 from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
 from PyFoam.RunDictionary.TimeDirectory import TimeDirectory
+
+from PyFoam.FoamInformation import foamTutorials
 
 from os import path,environ,system
 from tempfile import mkdtemp
@@ -20,13 +23,14 @@ class SolutionDirectoryTest(unittest.TestCase):
     def tearDown(self):
         rmtree(self.theDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testSolutionDirectoryBasicContainerStuff(self):
         test=SolutionDirectory(self.theFile)
         self.assertEqual(len(test),1)
-        self.assert_("0" in test)
-        self.assert_("1e-7" in test)
-        self.assert_("1e-4" not in test)
-        self.assert_(0. in test)
+        self.assertTrue("0" in test)
+        self.assertTrue("1e-7" in test)
+        self.assertTrue("1e-4" not in test)
+        self.assertTrue(0. in test)
         td=test["0"]
         self.assertEqual(type(td),TimeDirectory)
         self.assertRaises(KeyError,test.__getitem__,"42")
@@ -38,6 +42,7 @@ class SolutionDirectoryTest(unittest.TestCase):
         self.assertEqual(len(test),len(lst))
         self.assertEqual(lst,test.getTimes())
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testTimeCopy(self):
         test=SolutionDirectory(self.theFile)
         self.assertEqual(len(test),1)

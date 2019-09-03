@@ -135,9 +135,9 @@ class SampleDataTest(unittest.TestCase):
         sd=SampleDirectory(self.theDir)
         st=sd["0"]
         U=st[("line1","U")]
-        self.assert_(U.isVector())
+        self.assertTrue(U.isVector())
         p=st[("line1","p")]
-        self.assert_(not p.isVector())
+        self.assertTrue(not p.isVector())
         self.assertEqual(p.domain(),(0.,3.))
         self.assertEqual(p.range(),(0.,1.))
 

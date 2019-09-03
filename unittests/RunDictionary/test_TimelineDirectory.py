@@ -134,7 +134,7 @@ class TimelineValueTest(unittest.TestCase):
                                                    [0.0, 0.0, 1.0, 1.0],
                                                    [0.0, 0.0, 1.0, 1.0],
                                                    [1.0, 1.0, 1.0, 1.0]] )
-        self.assert_(st.isProbe())
+        self.assertTrue(st.isProbe())
         st=sd["h"]
         # this should be checked, but I don't want to
         self.assertEqual(st.getData([0.5,1,2,4]), [[0.0, 0.0, 0.0, 0.0],
@@ -147,7 +147,7 @@ class TimelineValueTest(unittest.TestCase):
         sd=TimelineDirectory(self.theDir,dirName="timeline")
         st=sd["p"]
         self.assertEqual(st.getData([0.5,1,2,4]),[[0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0], [1.0, 1.0, 1.0]])
-        self.assert_(not st.isProbe())
+        self.assertTrue(not st.isProbe())
         st=sd["h"]
         self.assertEqual(st.getData([0.5,1,2,4]), [[0.0, 0.0, 0.0], [0.0, 1.0], [0.0, 1.0], [1.0, 1.0, 1.0]])
         self.assertRaises(KeyError,sd.__getitem__,"ha")
@@ -173,7 +173,7 @@ class TimelineValueTest(unittest.TestCase):
         sd=TimelineDirectory(self.theDir,dirName="state")
         st=sd["state"]
         self.assertEqual(st.getData([0.5,1,2,4]),[['nix', 1.0], ['da', 2.0], ['da', 2.0], ['hier', 3.0]])
-        self.assert_(not st.isProbe())
+        self.assertTrue(not st.isProbe())
         spread=st()
 
         self.assertEqual(spread(-1,"state_t=0 state"),"")

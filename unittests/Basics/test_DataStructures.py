@@ -116,10 +116,10 @@ class BoolProxyTest(unittest.TestCase):
 
     def testTextual(self):
         v=BoolProxy(textual="on")
-        self.assert_(v)
+        self.assertTrue(v)
         self.assertEqual(str(v),'on')
         v=BoolProxy(textual="off")
-        self.assert_(not v)
+        self.assertTrue(not v)
         self.assertEqual(str(v),'off')
 
     def testConstruction(self):
@@ -136,9 +136,9 @@ class BoolProxyTest(unittest.TestCase):
 
     def testNonZero(self):
         v=BoolProxy(True)
-        self.assert_(v)
+        self.assertTrue(v)
         v=BoolProxy(False)
-        self.assert_(not v)
+        self.assertTrue(not v)
 
     def testEqual(self):
         v=BoolProxy(True)

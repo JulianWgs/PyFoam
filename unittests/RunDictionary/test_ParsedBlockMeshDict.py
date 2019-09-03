@@ -1,3 +1,4 @@
+import pytest
 import unittest
 
 from PyFoam.RunDictionary.ParsedBlockMeshDict import ParsedBlockMeshDict
@@ -24,6 +25,7 @@ class ParsedBlockMeshDictTest(unittest.TestCase):
     def tearDown(self):
         rmtree(self.dest)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBoundaryRead(self):
         blk=ParsedBlockMeshDict(SolutionDirectory(self.dest).blockMesh())
         self.assertEqual(blk.convertToMeters(),1.)
@@ -34,12 +36,13 @@ class ParsedBlockMeshDictTest(unittest.TestCase):
         self.assertEqual(blk.typicalLength(),1.25)
         self.assertEqual(str(blk.getBounds()),"([0.0, 0.0, 0.0], [2.0, 2.0, 0.5])")
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testRoundtripBlockMesh(self):
         blk=ParsedBlockMeshDict(SolutionDirectory(self.dest).blockMesh())
         txt=str(blk)
         try:
             i=int(txt.split("blocks")[1].split("(")[0])
-            self.assert_(False)
+            self.assertTrue(False)
         except ValueError:
             pass
 

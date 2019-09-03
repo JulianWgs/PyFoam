@@ -158,34 +158,34 @@ der name
     def testParseFieldUniform(self):
         p1=FoamStringParser('test  uniform 42;')
         self.assertEqual(type(p1["test"]),Field)
-        self.assert_(p1["test"].isUniform())
+        self.assertTrue(p1["test"].isUniform())
 
     def testParseFieldNonniform(self):
         p1=FoamStringParser('test  nonuniform 4(42 66 34 44);')
         self.assertEqual(type(p1["test"]),Field)
-        self.assert_(not p1["test"].isUniform())
+        self.assertTrue(not p1["test"].isUniform())
 
     def testParseFieldNonniformLengthThree(self):
         p1=FoamStringParser('test  nonuniform 3(42 66 34);')
         self.assertEqual(type(p1["test"]),Field)
-        self.assert_(not p1["test"].isUniform())
+        self.assertTrue(not p1["test"].isUniform())
 
     def testParseFieldNonniformLengthZero(self):
         p1=FoamStringParser('test  nonuniform 0();')
         self.assertEqual(type(p1["test"]),Field)
-        self.assert_(not p1["test"].isUniform())
+        self.assertTrue(not p1["test"].isUniform())
 
     def testListPrefixUniform(self):
         p=FoamStringParser("test 10{42.5};")
         self.assertEqual(len(p["test"]),10)
         self.assertEqual(type(p["test"]),Field)
-        self.assert_(p["test"].isUniform())
+        self.assertTrue(p["test"].isUniform())
 
     def testListPrefixUniformVector(self):
         p=FoamStringParser("test 10{(1 2 3)};")
         self.assertEqual(len(p["test"]),10)
         self.assertEqual(type(p["test"]),Field)
-        self.assert_(p["test"].isUniform())
+        self.assertTrue(p["test"].isUniform())
 
     def testListPrefixNested(self):
         p=FoamStringParser("test 3 ( 3{0.} 3 (1 1 1) 3 (2 2 2));")
@@ -425,7 +425,7 @@ nix "a=3+x;b=4;";
         p1=FoamStringParser("nix 2; test  3;")
         self.assertEqual(p1["nix"],2)
         del p1["nix"]
-        self.assert_("nix" not in p1)
+        self.assertTrue("nix" not in p1)
 
     def testSubstitute1(self):
         p1=FoamStringParser("nix $da;")
@@ -577,10 +577,11 @@ class ParsedBoundaryDictTest(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedBoundaryDict(self.theFile)
         self.assertEqual(len(test.content),4)
-        self.assert_("inlet" in test)
+        self.assertTrue("inlet" in test)
 
 
 class ParsedParameterFileTest(unittest.TestCase):
@@ -599,6 +600,7 @@ class ParsedParameterFileTest(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         if foamVersionNumber()<(1,5):
@@ -635,6 +637,7 @@ class ParsedParameterFileTest2(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         self.assertEqual(len(test["boundaryField"]),5)
@@ -651,6 +654,7 @@ class ParsedParameterFileTest3(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         if foamVersionNumber()>=(3,):
@@ -672,6 +676,7 @@ class ParsedParameterFileTest4(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         gradSchemes=1
@@ -698,6 +703,7 @@ class ParsedParameterFileTest5(unittest.TestCase):
             # there is no appropriate volSymmTensorField-file in 2.x
             remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         if foamVersionNumber()>=(2,):
             # there is no appropriate volSymmTensorField-file in 2.x
@@ -724,6 +730,7 @@ class ParsedParameterFileTest6(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         try:
             test=ParsedParameterFile(self.theFile)
@@ -743,6 +750,7 @@ class ParsedParameterFileIncludeTest(unittest.TestCase):
     def tearDown(self):
         pass
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBasicInclude(self):
         test=ParsedParameterFile(self.fileName,doMacroExpansion=True)
         self.assertEqual(test["pressure"],0)
@@ -756,6 +764,7 @@ class ParsedParameterFileIncludeFuncTest(unittest.TestCase):
     def tearDown(self):
         pass
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBasicIncludeFunc(self):
         test=ParsedParameterFile(self.fileName,doMacroExpansion=True)
         self.assertEqual(test["functions"]["probes"]["fields"],["U"])
@@ -768,6 +777,7 @@ class ParsedParameterFileIncludeFuncQuotedTest(unittest.TestCase):
     def tearDown(self):
         pass
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBasicIncludeFunc(self):
         test=ParsedParameterFile(self.fileName,doMacroExpansion=True)
         self.assertEqual(test["functions"]["sampleCp"]["fields"],["cp"])
@@ -780,6 +790,7 @@ class ParsedParameterFileCodeStreamTest(unittest.TestCase):
     def tearDown(self):
         pass
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBasicInclude(self):
         test=ParsedParameterFile(self.fileName)
         if foamVersionNumber()<(2,):
@@ -990,12 +1001,14 @@ class ReadIncludeAndMacroExpansionTest(unittest.TestCase):
     def tearDown(self):
         rmtree(self.testDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadNoMacroExpansion(self):
         kFile=ParsedParameterFile(path.join(self.dest,"k"))
         self.assertEqual(str(kFile["internalField"]),"uniform $turbulentKE")
         self.assertEqual(kFile["boundaryField"]["lowerWall"]["value"],"$internalField")
         self.assertEqual(kFile["boundaryField"]["motorBikeGroup"]["value"],"$internalField")
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadMacroExpansion(self):
         kFile=ParsedParameterFile(path.join(self.dest,"k"),
                                   doMacroExpansion=True)
@@ -1026,7 +1039,7 @@ c 3;
 """)
 
     def testHasItem(self):
-        self.assert_("a" in self.data)
+        self.assertTrue("a" in self.data)
 
     def testGetItem(self):
         self.assertEqual(self.data["a"],1)

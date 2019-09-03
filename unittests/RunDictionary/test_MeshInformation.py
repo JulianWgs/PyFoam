@@ -1,3 +1,4 @@
+import pytest
 import unittest
 
 from PyFoam.RunDictionary.MeshInformation import MeshInformation
@@ -7,6 +8,7 @@ from PyFoam.Execution.UtilityRunner import UtilityRunner
 from PyFoam.Error import PyFoamException
 
 from PyFoam.FoamInformation import oldAppConvention as oldApp
+from PyFoam.FoamInformation import foamTutorials
 
 from os import path,environ
 from shutil import rmtree
@@ -32,6 +34,7 @@ class MeshInformationTest(unittest.TestCase):
     def tearDown(self):
         rmtree(self.dest)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBoundaryRead(self):
         mesh=MeshInformation(self.dest)
         self.assertEqual(mesh.nrOfFaces(),9176)

@@ -239,6 +239,7 @@ class FoamFileGeneratorRoundtrip(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         data1=deepcopy(test.content)
@@ -255,6 +256,7 @@ class FoamFileGeneratorRoundtrip2(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         data1=deepcopy(test.content)
@@ -272,6 +274,7 @@ class FoamFileGeneratorRoundtripZipped(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile+".gz")
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         data1=deepcopy(test.content)
@@ -293,6 +296,7 @@ class FoamFileGeneratorRoundtrip2(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         data1=deepcopy(test.content)
@@ -313,6 +317,7 @@ class FoamFileGeneratorRoundtrip3(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         data1=deepcopy(test.content)
@@ -329,6 +334,7 @@ class FoamFileGeneratorRoundtrip4(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile)
         data1=deepcopy(test.content)
@@ -349,6 +355,7 @@ class FoamFileGeneratorRoundtrip5(unittest.TestCase):
             # there is no appropriate volSymmTensorField-file in 2.x
             remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         if foamVersionNumber()>=(2,):
             # there is no appropriate volSymmTensorField-file in 2.x
@@ -374,6 +381,7 @@ class FoamFileGeneratorRoundtripLongList(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile,listLengthUnparsed=100)
         data1=deepcopy(test.content)
@@ -396,6 +404,7 @@ class FoamFileGeneratorRoundtripLongList2(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile,listLengthUnparsed=100)
         data1=deepcopy(test.content)
@@ -460,6 +469,7 @@ class IncludeFilesRoundTrip(unittest.TestCase):
     def tearDown(self):
         rmtree(self.theDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorial(self):
         test=ParsedParameterFile(self.theFile,listLengthUnparsed=100)
         data1=deepcopy(test.content)
@@ -468,6 +478,7 @@ class IncludeFilesRoundTrip(unittest.TestCase):
         test2=ParsedParameterFile(self.theFile,listLengthUnparsed=100)
         self.assertEqual(data1,test2.content)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testReadTutorialWithMacros(self):
         test=ParsedParameterFile(self.theFile,
                                  listLengthUnparsed=100,
@@ -496,6 +507,7 @@ class CodeStreamRoundTrip(unittest.TestCase):
     def tearDown(self):
         rmtree(self.theDir)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBasicInclude(self):
         if foamVersionNumber()<(2,):
             return
