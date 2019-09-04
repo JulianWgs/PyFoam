@@ -8,5 +8,3 @@ try:
         from PyFoam.Applications.DisplayBlockMeshQt import DisplayBlockMeshDialog
 except:
     pass
-
-theSuite=unittest.TestSuite()

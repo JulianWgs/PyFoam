@@ -9,7 +9,6 @@ from os import path,environ
 from tempfile import mktemp
 from shutil import rmtree
 
-theSuite=unittest.TestSuite()
 
 def plateHoleTutorial():
     prefix=foamTutorials()
@@ -45,5 +44,3 @@ class ParsedBlockMeshDictTest(unittest.TestCase):
             self.assertTrue(False)
         except ValueError:
             pass
-
-theSuite.addTest(unittest.makeSuite(ParsedBlockMeshDictTest,"test"))

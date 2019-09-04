@@ -11,7 +11,6 @@ from shutil import rmtree
 from os import path
 from tempfile import mktemp
 
-theSuite=unittest.TestSuite()
 
 class BoundaryDictTest(unittest.TestCase):
     def setUp(self):
@@ -44,5 +43,3 @@ class BoundaryDictTest(unittest.TestCase):
             self.fail()
         except PyFoamException:
             pass
-
-theSuite.addTest(unittest.makeSuite(BoundaryDictTest,"test"))

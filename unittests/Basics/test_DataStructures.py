@@ -10,7 +10,6 @@ from PyFoam.Basics.FoamFileGenerator import (Vector,Dimension,Field,
 
 from PyFoam.ThirdParty.six import iteritems
 
-theSuite=unittest.TestSuite()
 
 class DictProxyTest(unittest.TestCase):
     def testDictProxy(self):
@@ -77,7 +76,6 @@ class DictProxyTest(unittest.TestCase):
             s2.add(k)
         self.assertEqual(s1,s2)
 
-theSuite.addTest(unittest.makeSuite(DictProxyTest,"test"))
 
 class TupleProxyTest(unittest.TestCase):
     def testTupleProxy(self):
@@ -87,7 +85,6 @@ class TupleProxyTest(unittest.TestCase):
         d[1]=4
         self.assertEqual(d[1],4)
 
-theSuite.addTest(unittest.makeSuite(TupleProxyTest,"test"))
 
 class VectorTest(unittest.TestCase):
     def testString(self):
@@ -105,7 +102,6 @@ class VectorTest(unittest.TestCase):
         v[0]=-3
         self.assertEqual(v,Vector(-3,2,1))
 
-theSuite.addTest(unittest.makeSuite(VectorTest,"test"))
 
 class BoolProxyTest(unittest.TestCase):
     def testString(self):
@@ -175,7 +171,6 @@ class BoolProxyTest(unittest.TestCase):
         self.assertEqual(None==f,False==None)
         self.assertEqual(t=="",True=="")
 
-theSuite.addTest(unittest.makeSuite(BoolProxyTest,"test"))
 
 class VectorOperatorTest(unittest.TestCase):
     def testAdd(self):
@@ -207,7 +202,6 @@ class VectorOperatorTest(unittest.TestCase):
     def testPos(self):
         self.assertEqual(Vector(1,-1,0),+Vector(1,-1,0))
 
-theSuite.addTest(unittest.makeSuite(VectorOperatorTest,"test"))
 
 class TensorTest(unittest.TestCase):
     def testString(self):
@@ -221,7 +215,6 @@ class TensorTest(unittest.TestCase):
         v[0]=-3
         self.assertEqual(v,Tensor(-3,2,1,-3,-2,-1,1,2,3))
 
-theSuite.addTest(unittest.makeSuite(TensorTest,"test"))
 
 class SymmTensorTest(unittest.TestCase):
     def testString(self):
@@ -235,7 +228,6 @@ class SymmTensorTest(unittest.TestCase):
         v[0]=-3
         self.assertEqual(v,SymmTensor(-3,2,1,-3,-2,-1))
 
-theSuite.addTest(unittest.makeSuite(SymmTensorTest,"test"))
 
 class DimensionTest(unittest.TestCase):
     def testString(self):
@@ -262,7 +254,6 @@ class DimensionTest(unittest.TestCase):
         self.assertEqual(v,Dimension("m s^-1"))
         self.assertEqual(v==None,False)
 
-theSuite.addTest(unittest.makeSuite(DimensionTest,"test"))
 
 class FieldTest(unittest.TestCase):
     def testString(self):
@@ -318,7 +309,6 @@ class FieldTest(unittest.TestCase):
         self.assertEqual(n["y"][13],200.)
         self.assertEqual(n.size,42)
 
-theSuite.addTest(unittest.makeSuite(FieldTest,"test"))
 
 class CodeStreamTest(unittest.TestCase):
     def testString(self):
@@ -335,7 +325,6 @@ class CodeStreamTest(unittest.TestCase):
         c=Codestream(s)
         self.assertEqual(c,s)
 
-theSuite.addTest(unittest.makeSuite(CodeStreamTest,"test"))
 
 class UnparsedTest(unittest.TestCase):
     def setUp(self):
@@ -371,5 +360,3 @@ class UnparsedTest(unittest.TestCase):
         self.assertEqual(data["x"][0],1.0)
         self.assertEqual(data["z"][-1],1e-5)
         self.assertEqual(data["cell"][1],34)
-
-theSuite.addTest(unittest.makeSuite(UnparsedTest,"test"))

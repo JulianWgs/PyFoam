@@ -11,7 +11,6 @@ from os import path,environ,remove,system
 from shutil import copytree,rmtree,copyfile
 from tempfile import mktemp,mkdtemp
 
-theSuite=unittest.TestSuite()
 
 def damBreakTutorial():
     prefix=foamTutorials()
@@ -84,7 +83,6 @@ class TimeDirectoryTest(unittest.TestCase):
         self.assertEqual(len(test),0)
         self.assertEqual(len(SolutionDirectory(self.theFile)),2)
 
-theSuite.addTest(unittest.makeSuite(TimeDirectoryTest,"test"))
 
 class TimeDirectoryTestZipped(unittest.TestCase):
     def setUp(self):
@@ -114,7 +112,6 @@ class TimeDirectoryTestZipped(unittest.TestCase):
         test[gammaName()]=test[gammaName()+extension]
         self.assertEqual(len(test),4)
 
-theSuite.addTest(unittest.makeSuite(TimeDirectoryTestZipped,"test"))
 
 class TimeDirectoryTestCopy(unittest.TestCase):
     def setUp(self):
@@ -173,5 +170,3 @@ class TimeDirectoryTestCopy(unittest.TestCase):
         res=test1.copy(test2,exclude=["U"],overwrite=False)
         self.assertEqual(len(test1),3)
         self.assertEqual(len(res),1)
-
-theSuite.addTest(unittest.makeSuite(TimeDirectoryTestCopy,"test"))

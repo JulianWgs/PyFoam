@@ -4,5 +4,3 @@ import unittest
 IPython = pytest.importorskip("IPython")
 
 from PyFoam.IPythonHelpers.PermanentStorage import PermanentStorage
-
-theSuite=unittest.TestSuite()

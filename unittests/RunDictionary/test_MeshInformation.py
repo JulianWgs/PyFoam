@@ -16,8 +16,6 @@ from tempfile import mktemp
 
 from .test_TimeDirectory import damBreakTutorial
 
-theSuite=unittest.TestSuite()
-
 class MeshInformationTest(unittest.TestCase):
     def setUp(self):
         self.dest=mktemp()
@@ -45,7 +43,5 @@ class MeshInformationTest(unittest.TestCase):
         except:
             if not oldApp():
                 self.fail()
-
-theSuite.addTest(unittest.makeSuite(MeshInformationTest,"test"))
 
 # Should work with Python3 and Python2

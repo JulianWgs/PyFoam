@@ -10,7 +10,6 @@ from shutil import copyfile
 from .test_TimeDirectory import damBreakTutorial,gammaName
 from PyFoam.FoamInformation import foamVersionNumber,foamFork,foamTutorials
 
-theSuite=unittest.TestSuite()
 
 class SolutionFileTest(unittest.TestCase):
     def setUp(self):
@@ -37,7 +36,6 @@ class SolutionFileTest(unittest.TestCase):
         test.replaceInternal(3.14)
         self.assertEqual(test.readInternalUniform(),"3.14")
 
-theSuite.addTest(unittest.makeSuite(SolutionFileTest,"test"))
 
 class SolutionFileTestZipped(unittest.TestCase):
     def setUp(self):
@@ -65,6 +63,5 @@ class SolutionFileTestZipped(unittest.TestCase):
         test.replaceInternal(3.14)
         self.assertEqual(test.readInternalUniform(),"3.14")
 
-theSuite.addTest(unittest.makeSuite(SolutionFileTestZipped,"test"))
 
 # Should work with Python3 and Python2

@@ -9,7 +9,6 @@ from PyFoam.ThirdParty.six import PY3
 
 import sys
 
-theSuite=unittest.TestSuite()
 
 template1="""$$ y = 3+x
 This should be $x+y$"""
@@ -107,7 +106,6 @@ class TemplateFileTest(unittest.TestCase):
     def testTemplateFileBuiltinStuff(self):
         t=TemplateFile(content=templateBuiltIn)
         self.assertEqual(t.getString({}),"\nTRUE\nFALSE\n2 3\n* 32\n")
-theSuite.addTest(unittest.makeSuite(TemplateFileTest,"test"))
 
 class TemplateFileAllowExecutionTest(unittest.TestCase):
     def testAssignmentNotWorkingInPython3(self):
@@ -140,7 +138,6 @@ class TemplateFileOldFormatTest(unittest.TestCase):
         t=TemplateFileOldFormat(content=templateMath)
         self.assertEqual(t.getString({"x":4}),"sqrt(x) = 2.0\n")
 
-theSuite.addTest(unittest.makeSuite(TemplateFileOldFormatTest,"test"))
 
 class PyratempPreprocessorTest(unittest.TestCase):
     def testFullPreprocessing(self):
@@ -193,5 +190,3 @@ class PyratempPreprocessorTest(unittest.TestCase):
         self.assertEqual(p(" $foo$  $bar$ ")," $foo$  $bar$ ")
         self.assertEqual(p("$foo$  $bar$"),"$foo$  $bar$")
         self.assertEqual(p("$foo$  $bar$\n"),"$foo$  $bar$\n")
-
-theSuite.addTest(unittest.makeSuite(PyratempPreprocessorTest,"test"))

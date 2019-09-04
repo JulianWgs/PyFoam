@@ -4,7 +4,6 @@ import numpy
 
 from PyFoam.Basics.SpreadsheetData import SpreadsheetData
 
-theSuite=unittest.TestSuite()
 
 names1=['t','p1','p2']
 data1=[[(k+1)*i for k in range(len(names1))] for i in range(len(names1)*2)]
@@ -74,7 +73,6 @@ class SpreadsheetDataTest(unittest.TestCase):
         sp1.addTimes([-3,4,19],interpolate=True)
         self.assertEqual(len(sp1.data),15)
 
-theSuite.addTest(unittest.makeSuite(SpreadsheetDataTest,"test"))
 
 names3 = ['t','val']
 data3=[[k,k*k]for k in range(10)]
@@ -143,7 +141,6 @@ class SpreadsheetInterpolationTest(unittest.TestCase):
         self.assertAlmostEqual(data["val"],26.1)
         self.assertEqual(data["descr"],b('val_5'))
 
-theSuite.addTest(unittest.makeSuite(SpreadsheetInterpolationTest,"test"))
 
 names4 = ['t','val']
 data4=[[k,k*k+1] for k in range(10)]
@@ -299,7 +296,6 @@ class SpreadsheetDifferenceTest(unittest.TestCase):
         self.assertEqual(diff2["average"],None)
         self.assertEqual(diff2["wAverage"],None)
 
-theSuite.addTest(unittest.makeSuite(SpreadsheetDifferenceTest,"test"))
 
 from PyFoam.ThirdParty.six import BytesIO,b
 
@@ -334,5 +330,3 @@ class SpreadsheetReadFileTest(unittest.TestCase):
     def testSpreadsheetReadFileHandleTest(self):
         sp=SpreadsheetData(txtName=BytesIO(filecontent))
         self.assertEqual(len(sp.names()),4)
-
-theSuite.addTest(unittest.makeSuite(SpreadsheetReadFileTest,"test"))

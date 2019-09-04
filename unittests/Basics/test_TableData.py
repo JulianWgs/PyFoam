@@ -1,9 +1,7 @@
-
 import unittest
 
 from PyFoam.Basics.TableData import TableData
 
-theSuite=unittest.TestSuite()
 
 class CustomPlotInfoTest(unittest.TestCase):
     def testCreateTable(self):
@@ -14,6 +12,3 @@ class CustomPlotInfoTest(unittest.TestCase):
         self.assertEqual(tb[("b","d")],None)
         self.assertRaises(IndexError,
                           (lambda:tb[("d","a")]))
-
-theSuite.addTest(unittest.makeSuite(CustomPlotInfoTest,"test"))
-

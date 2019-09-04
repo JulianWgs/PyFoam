@@ -33,7 +33,6 @@ def checkForTests(lib,test):
 
 from %s import %s
 
-theSuite=unittest.TestSuite()
 """ % (".".join(lib+[className]),className))
                 fCreated+=1
 

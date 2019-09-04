@@ -4,8 +4,6 @@ from .LineFeeder import feedText
 
 from PyFoam.LogAnalysis.TimeLineAnalyzer import TimeLineAnalyzer
 
-theSuite=unittest.TestSuite()
-
 class TimeLineAnalyzerClassTest(unittest.TestCase):
 
     def setTime(self,time):

@@ -12,7 +12,6 @@ from shutil import rmtree,copytree
 
 from .test_TimeDirectory import damBreakTutorial
 
-theSuite=unittest.TestSuite()
 
 class SolutionDirectoryTest(unittest.TestCase):
     def setUp(self):
@@ -54,6 +53,5 @@ class SolutionDirectoryTest(unittest.TestCase):
         del test[-1]
         self.assertEqual(len(test),0)
 
-theSuite.addTest(unittest.makeSuite(SolutionDirectoryTest,"test"))
 
 # Should work with Python3 and Python2

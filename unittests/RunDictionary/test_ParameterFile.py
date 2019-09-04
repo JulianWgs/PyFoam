@@ -12,8 +12,6 @@ from tempfile import mktemp
 
 from .test_TimeDirectory import damBreakTutorial
 
-theSuite=unittest.TestSuite()
-
 class ParameterFileTest(unittest.TestCase):
     def setUp(self):
         self.dest=mktemp()
@@ -44,5 +42,3 @@ class ParameterFileTest(unittest.TestCase):
         self.assertEqual(par.readParameter("startTime"),"42")
         par.replaceParameter("startTime","\t 42")
         self.assertEqual(par.readParameter("startTime"),"42")
-
-theSuite.addTest(unittest.makeSuite(ParameterFileTest,"test"))

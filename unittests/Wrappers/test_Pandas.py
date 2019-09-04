@@ -8,7 +8,6 @@ from PyFoam.Wrappers.Pandas import PyFoamDataFrame,PandasWrapperPyFoamException
 
 from math import isnan
 
-theSuite=unittest.TestSuite()
 
 class PyFoamDataFrameTest(unittest.TestCase):
     def setUp(self):
@@ -132,5 +131,3 @@ class PyFoamDataFrameTest(unittest.TestCase):
         self.assertTrue(isnan(descr["b"]["integral"]))
         self.assertEqual(descr["b"]["valid length"],0)
         self.assertTrue(isnan(descr["b"]["weighted average"]))
-
-theSuite.addTest(unittest.makeSuite(PyFoamDataFrameTest,"test"))
