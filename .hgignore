@@ -13,3 +13,5 @@ build
 PyFoam.egg-info
 
 venv*
+.tox
+.pytest_cache
