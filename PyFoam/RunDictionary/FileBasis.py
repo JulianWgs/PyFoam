@@ -84,6 +84,8 @@ class FileBasis(Utilities):
             self.content=None
         if self.useBinary and mode.find("b")<0:
             mode+="b"
+        elif mode.find("b")>=0:
+            self.useBinary=True
         if self.name:
             if self.zipped:
                 self.fh=gzip.open(self.name+".gz",mode)
@@ -118,6 +120,8 @@ class FileBasis(Utilities):
             if self.content!=None:
                 self.openFile(keepContent=True,mode="w")
                 txt=str(self)
+                if bytes!=str and self.useBinary:
+                    txt=bytes(txt,"utf-8")
                 self.fh.write(self.encode(txt))
                 self.closeFile()
         else:
@@ -125,7 +129,7 @@ class FileBasis(Utilities):
 
     def encode(self,txt):
         """Encode a string to byte if necessary (for Python3)"""
-        if PY3 and self.zipped:
+        if PY3 and self.zipped and isinstance(txt,(str,)):
             return bytes(txt,"utf-8")
         else:
             return txt

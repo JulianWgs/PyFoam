@@ -159,7 +159,7 @@
 *** =pyFoamBinarySize.py= did not count files in =build=
     Some distros have a directory =build= with the intermediate object
     files. This has not been counted until now
-*** Binary files with =ParsedParameterFile= not working in PYthon 3
+*** Binary files with =ParsedParameterFile= not working in Python 3
     Because Python 3 tries to encode read files as Unicode strings and
     certain byte combinations are not valid UTF-8 encodings.
 
@@ -169,6 +169,11 @@
     Reported in
     https://sourceforge.net/p/openfoam-extend/ticketspyfoam/225/ by
     Johan Hidding
+*** Improved handling of binary files in Python 2 and 3
+    Parts of the =FileBasis= class were not working correctly in
+    Python 3 because there strings are no longer 'lists of
+    bytes'. This has been adapted so that these parts work correctly
+    in Python 2 *and* 3 and unit tests have been added
 ** Infrastructure
 ** ThirdParty
 * Version 0.6.10 - 2018-08-12
