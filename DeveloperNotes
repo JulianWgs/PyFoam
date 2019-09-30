@@ -71,7 +71,8 @@
   People who insist on using =git= should consider a hard fork as only
   Mercurial repositories will be merged (but I assume that everyone is
   flexible enough to broaden his perspective by learning a new source
-  control system)
+  control system. A quick listing of the differences can be found at
+  https://www.mercurial-scm.org/wiki/GitConcepts)
 ** Repository organization
     The organization of the repository is according to the Driessen
     branching model described here
@@ -108,7 +109,7 @@
   Lastly make sure that the current sources are used instead of a
   pre-installed =PyFoam= with
 
-: . ./setDevelopmentPath.sh
+: source ./setDevelopmentPath.sh
 
   (this is sufficient if you want to use the current sources with the
   system-Python)
@@ -155,9 +156,10 @@
   OpenFOAM is installed
 
   To make sure that =PyFoam= works with different Python-versions the
-  utility =tox= can be used. But calling
+  utility =tox= can be used. By calling
 : tox
-  the tests are run with Python 2.7, 3.6 and 3.7
+  the tests are run with Python 2.7, 3.6 and 3.7 (this includes
+  generating packages as simulating their installation)
 
 * Footnotes
 

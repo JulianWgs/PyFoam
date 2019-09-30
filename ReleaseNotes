@@ -4,6 +4,9 @@
 *** Moved library into =src=-directory
     To make sure that the =tox=-tests are not affected the library is
     moved into the =src=-subdirectory
+*** Added Developer notes
+    Added a file =DeveloperNotes= with hints for people who want to
+    contribute
 ** Major changes
 ** Incompatibilities
 *** Behaviour reading =customRegexp=
