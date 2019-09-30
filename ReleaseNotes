@@ -1,5 +1,9 @@
 # -*- mode: org -*-
 * Version 0.6.11 - Not yet released
+** Code structure
+*** Moved library into =src=-directory
+    To make sure that the =tox=-tests are not affected the library is
+    moved into the =src=-subdirectory
 ** Major changes
 ** Incompatibilities
 *** Behaviour reading =customRegexp=

@@ -1,4 +1,5 @@
 from setuptools import setup
+from setuptools import find_packages
 
 import glob,os,sys
 # To use a consistent encoding
@@ -35,11 +36,13 @@ setup(
                 'PyFoam.ThirdParty.tqdm',
                 'PyFoam.ThirdParty.tqdm.tqdm',
                 'PyFoam.Wrappers'],
+    #    packages=find_packages('src'),
+    package_dir={'':'src'},
     description='Python Utilities for OpenFOAM',
     # long_description=long_description,
     url='http://openfoamwiki.net/index.php/Contrib/PyFoam',
     author='Bernhard F.W. Gschaider',
-    author_email='bgschaid@ice-sf.at',
+    author_email='bgschaid@hfd-research.com',
     scripts=scriptlist,
     license="GPL",
     classifiers=[
@@ -49,7 +52,6 @@ setup(
         "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
 
         "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
