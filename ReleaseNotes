@@ -1,4 +1,13 @@
 # -*- mode: org -*-
+* Version 0.6.12 - Not releases
+** New features/utilities
+** Enhancements to the utilities
+** Enhancements to the library
+** Bug fixes
+** Incompatibilities
+** Code structure
+** Infrastructure
+** ThirdParty
 * Version 0.6.11 - 2019-10-31
 ** Code structure
 *** Moved library into =src=-directory
