@@ -1,5 +1,5 @@
 # -*- mode: org -*-
-* Version 0.6.11 - Not yet released
+* Version 0.6.11 - 2019-10-31
 ** Code structure
 *** Moved library into =src=-directory
     To make sure that the =tox=-tests are not affected the library is
@@ -7,7 +7,6 @@
 *** Added Developer notes
     Added a file =DeveloperNotes= with hints for people who want to
     contribute
-** Major changes
 ** Incompatibilities
 *** Behaviour reading =customRegexp=
     Macro expansion in the =customRegexp= might break it for some
@@ -17,7 +16,6 @@
 
     A potential problem is that the new implementation leaves files in
     the =/tmp= filesystem
-** New feature/utilities
 ** Enhancements to Utilities
 *** Replay data-files in =customRegexp=
     There are two new =type= s available in =customRegexp=: =data= and
@@ -181,8 +179,6 @@
     Python 3 because there strings are no longer 'lists of
     bytes'. This has been adapted so that these parts work correctly
     in Python 2 *and* 3 and unit tests have been added
-** Infrastructure
-** ThirdParty
 * Version 0.6.10 - 2018-08-12
   This is only a minor release with the main purpose to recognize
   OpenFOAM 6 installations with their new numbering scheme
