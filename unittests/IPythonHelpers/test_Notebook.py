@@ -1,5 +1,6 @@
+import pytest
 import unittest
 
-from PyFoam.IPythonHelpers.Notebook import Notebook
+IPython = pytest.importorskip("IPython")
 
-theSuite=unittest.TestSuite()
+from PyFoam.IPythonHelpers.Notebook import Notebook

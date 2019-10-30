@@ -1,4 +1,5 @@
 from setuptools import setup
+from setuptools import find_packages
 
 import glob,os,sys
 # To use a consistent encoding
@@ -14,6 +15,9 @@ from PyFoam import versionString
 
 # with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
 #    long_description = f.read()
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name='PyFoam',
@@ -35,11 +39,14 @@ setup(
                 'PyFoam.ThirdParty.tqdm',
                 'PyFoam.ThirdParty.tqdm.tqdm',
                 'PyFoam.Wrappers'],
+    #    packages=find_packages('src'),
+    package_dir={'':'src'},
     description='Python Utilities for OpenFOAM',
-    # long_description=long_description,
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='http://openfoamwiki.net/index.php/Contrib/PyFoam',
     author='Bernhard F.W. Gschaider',
-    author_email='bgschaid@ice-sf.at',
+    author_email='bgschaid@hfd-research.com',
     scripts=scriptlist,
     license="GPL",
     classifiers=[
@@ -47,17 +54,16 @@ setup(
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering",
         "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
-
         "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.2",
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
     ],
     keywords='cfd openfoam',
-
     install_requires=['numpy'],
 )

@@ -2,7 +2,6 @@
 """Encapsulate a case and give convenient access to certain applications
 """
 
-from docutils.core import publish_parts
 from os import path
 
 from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
@@ -19,9 +18,17 @@ from PyFoam.Error import error
 from PyFoam.IPythonHelpers import create_code_cell
 from PyFoam.IPythonHelpers.PermanentStorage import PermanentStorage
 
-from IPython.display import HTML,display
-import ipywidgets as widgets
-from IPython import get_ipython
+try:
+    from docutils.core import publish_parts
+except ImportError:
+    print_("docutils needs to be installed for this module to work")
+
+try:
+    from IPython.display import HTML,display
+    import ipywidgets as widgets
+    from IPython import get_ipython
+except ImportError:
+    print_("IPython and ipywidgets need to be installed for this module to work")
 
 class Case(object):
     """This class is initialized with a path and gives access to

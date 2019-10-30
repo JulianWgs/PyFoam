@@ -1,10 +1,8 @@
-
 import unittest
 
 from PyFoam.Basics.CustomPlotInfo import CustomPlotInfo,readCustomPlotInfo,resetCustomCounter
 from PyFoam.RunDictionary.ParsedParameterFile import FoamStringParser
 
-theSuite=unittest.TestSuite()
 
 pureRegexp="Time = (%d%)"
 pureRegexp2="""Time = (%d%)
@@ -59,7 +57,6 @@ class CustomPlotInfoTest(unittest.TestCase):
         ci=CustomPlotInfo(data["time"])
         self.assertEqual(ci.nr,2)
 
-theSuite.addTest(unittest.makeSuite(CustomPlotInfoTest,"test"))
 
 class readCustomPlotInfoTest(unittest.TestCase):
     def setUp(self):
@@ -82,5 +79,3 @@ class readCustomPlotInfoTest(unittest.TestCase):
         self.assertEqual(len(ci),1)
         ci=readCustomPlotInfo(newStyle2)
         self.assertEqual(len(ci),2)
-
-theSuite.addTest(unittest.makeSuite(readCustomPlotInfoTest,"test"))

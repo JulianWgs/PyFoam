@@ -1,3 +1,4 @@
+import pytest
 import unittest
 
 from PyFoam.RunDictionary.BoundaryDict import BoundaryDict
@@ -10,7 +11,6 @@ from shutil import rmtree
 from os import path
 from tempfile import mktemp
 
-theSuite=unittest.TestSuite()
 
 class BoundaryDictTest(unittest.TestCase):
     def setUp(self):
@@ -21,6 +21,7 @@ class BoundaryDictTest(unittest.TestCase):
     def tearDown(self):
         rmtree(self.dest)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBoundaryRead(self):
         bnd=BoundaryDict(self.dest)
         self.assertEqual(bnd["walls"]["type"],"wall")
@@ -28,6 +29,7 @@ class BoundaryDictTest(unittest.TestCase):
         self.assertEqual(len(bnd.patches()),4)
         self.assertEqual(len(bnd.patches(patchType="patch")),2)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBoundaryWrite(self):
         bnd=BoundaryDict(self.dest)
         test1={"type":"wall" , "nFaces":0,"startFace":666}
@@ -41,5 +43,3 @@ class BoundaryDictTest(unittest.TestCase):
             self.fail()
         except PyFoamException:
             pass
-
-theSuite.addTest(unittest.makeSuite(BoundaryDictTest,"test"))

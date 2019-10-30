@@ -1,5 +1,6 @@
+import pytest
 import unittest
 
-from PyFoam.IPythonHelpers.Case import Case
+IPython = pytest.importorskip("IPython")
 
-theSuite=unittest.TestSuite()
+from PyFoam.IPythonHelpers.Case import Case

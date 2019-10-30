@@ -64,6 +64,7 @@ class ParsedParameterFile(FileBasisBackup):
         FileBasisBackup.__init__(self,
                                  name,
                                  backup=backup,
+                                 useBinary=True,
                                  createZipped=createZipped)
         self.debug=debug
         self.boundaryDict=boundaryDict
@@ -745,21 +746,33 @@ class FoamFileParser(PlyParser):
         '''include : INCLUDE SCONST ignore_rest_of_line
                    | INCLUDE_ETC SCONST ignore_rest_of_line
                    | INCLUDE_FUNC NAME ignore_rest_of_line
+                   | INCLUDE_FUNC SCONST ignore_rest_of_line
                    | INCLUDEIFPRESENT SCONST ignore_rest_of_line'''
         if self.doMacros:
             fName=path.join(self.directory(),p[2][1:-1])
+
+            if p[1]=="includeFunc":
+                funcName=p[2]
+                if funcName[0]=='"' and funcName[-1]=='"':
+                    funcName=funcName[1:-1].strip()
+                includeName=funcName
+                if funcName[-1]==")" and funcName.find("(")>0:
+                    includeName=includeName[:includeName.find("(")]
+                    raise PyFoamParserError("Parameters for #includeFunc not implemented")
+
             if p[1]=="includeEtc":
                 from PyFoam.FoamInformation import foamEtc
                 fName=path.join(foamEtc(),p[2][1:-1])
             elif p[1]=="includeFunc"and not path.exists(fName):
-                from PyFoam.FoamInformation import foamEtc
+                from PyFoam.FoamInformation import foamPostProcessing
                 from PyFoam.Basics.Utilities import findFileInDir
 
-                fName=findFileInDir(self.directory(),p[2])
+                fName=findFileInDir(self.directory(),includeName)
                 if not path.exists(fName):
-                    fName=findFileInDir(foamEtc(),p[2])
+                    fName=findFileInDir(foamPostProcessing(),includeName)
 
             read=True
+
             if p[1]=="includeIfPresent" and not path.exists(fName):
                 read=False
             if read and not path.exists(fName):
@@ -768,17 +781,22 @@ class FoamFileParser(PlyParser):
                 try:
                     data=ParsedParameterFile(fName,
                                              noHeader=True,
-                                             dictStack=self.dictStack,
+                                             preserveComments=self.preserveComments,
+                                             dictStack=self.dictStack if p[1]!="includeFunc" else None,
                                              doMacroExpansion=self.doMacros)
                 except PyFoamParserError:
                     # retry but discard header
                     data=ParsedParameterFile(fName,
                                              noHeader=False,
-                                             dictStack=self.dictStack,
+                                             preserveComments=self.preserveComments,
+                                             dictStack=self.dictStack if p[1]!="includeFunc" else None,
                                              doMacroExpansion=self.doMacros)
                 into=self.dictStack[-1]
-                for k in data:
-                    into[k]=data[k]
+                if p[1]=="includeFunc":
+                    into[funcName]=data.content
+                else:
+                    for k in data:
+                        into[k]=data[k]
 
         p[0] = p[1] + " " + p[2]
 

@@ -17,6 +17,6 @@ for f in glob.glob(path.join(binDir,"*.py")):
     out=open(path.join(manDir,util+".1"),"w")
     p1=subprocess.Popen([f,"-h"],stdout=subprocess.PIPE)
     rst+=p1.communicate()[0]
-    p2=subprocess.Popen(["rst2man-2.7.py"],stdin=subprocess.PIPE,stdout=out)
+    p2=subprocess.Popen(["rst2man.py"],stdin=subprocess.PIPE,stdout=out)
     p2.communicate(rst)
     print "Ran:",p2.wait()

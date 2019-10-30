@@ -5,5 +5,3 @@ try:
     from PyFoam.Applications.APoMaFoXiiQt import APoMaFoXiiQt
 except:
     pass
-
-theSuite=unittest.TestSuite()

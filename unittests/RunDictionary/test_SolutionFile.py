@@ -1,3 +1,4 @@
+import pytest
 import unittest
 
 from PyFoam.RunDictionary.SolutionFile import SolutionFile
@@ -7,9 +8,8 @@ from tempfile import mktemp
 from shutil import copyfile
 
 from .test_TimeDirectory import damBreakTutorial,gammaName
-from PyFoam.FoamInformation import foamVersionNumber,foamFork
+from PyFoam.FoamInformation import foamVersionNumber,foamFork,foamTutorials
 
-theSuite=unittest.TestSuite()
 
 class SolutionFileTest(unittest.TestCase):
     def setUp(self):
@@ -25,6 +25,7 @@ class SolutionFileTest(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile)
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testSolutionFileReadWrite(self):
         test=SolutionFile(path.dirname(self.theFile),path.basename(self.theFile))
         self.assertEqual(test.readInternalUniform(),"0")
@@ -35,7 +36,6 @@ class SolutionFileTest(unittest.TestCase):
         test.replaceInternal(3.14)
         self.assertEqual(test.readInternalUniform(),"3.14")
 
-theSuite.addTest(unittest.makeSuite(SolutionFileTest,"test"))
 
 class SolutionFileTestZipped(unittest.TestCase):
     def setUp(self):
@@ -52,6 +52,7 @@ class SolutionFileTestZipped(unittest.TestCase):
     def tearDown(self):
         remove(self.theFile+".gz")
 
+    @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testSolutionFileZippedReadWrite(self):
         test=SolutionFile(path.dirname(self.theFile),path.basename(self.theFile))
         self.assertEqual(test.readInternalUniform(),"0")
@@ -62,6 +63,5 @@ class SolutionFileTestZipped(unittest.TestCase):
         test.replaceInternal(3.14)
         self.assertEqual(test.readInternalUniform(),"3.14")
 
-theSuite.addTest(unittest.makeSuite(SolutionFileTestZipped,"test"))
 
 # Should work with Python3 and Python2

@@ -6,7 +6,6 @@ from os import path,mkdir
 from shutil import rmtree
 from tempfile import mkdtemp
 
-theSuite=unittest.TestSuite()
 
 def destroyDirectory(theDir):
     if path.exists(theDir):
@@ -89,7 +88,6 @@ class SampleDirectoryTest(unittest.TestCase):
         self.assertEqual(len(sd.values()),5)
         self.assertEqual(len(sd.getData()),9)
 
-theSuite.addTest(unittest.makeSuite(SampleDirectoryTest,"test"))
 
 class SampleDirectoryTestPrenamed(unittest.TestCase):
     def setUp(self):
@@ -108,7 +106,6 @@ class SampleDirectoryTestPrenamed(unittest.TestCase):
         self.assertEqual(len(sd.values()),3)
         self.assertEqual(len(sd.getData()),6)
 
-theSuite.addTest(unittest.makeSuite(SampleDirectoryTestPrenamed,"test"))
 
 class SampleTimeTest(unittest.TestCase):
     def setUp(self):
@@ -122,7 +119,6 @@ class SampleTimeTest(unittest.TestCase):
         st=sd["0"]
         self.assertRaises(KeyError,sd.__getitem__,"3")
 
-theSuite.addTest(unittest.makeSuite(SampleTimeTest,"test"))
 
 class SampleDataTest(unittest.TestCase):
     def setUp(self):
@@ -135,9 +131,9 @@ class SampleDataTest(unittest.TestCase):
         sd=SampleDirectory(self.theDir)
         st=sd["0"]
         U=st[("line1","U")]
-        self.assert_(U.isVector())
+        self.assertTrue(U.isVector())
         p=st[("line1","p")]
-        self.assert_(not p.isVector())
+        self.assertTrue(not p.isVector())
         self.assertEqual(p.domain(),(0.,3.))
         self.assertEqual(p.range(),(0.,1.))
 
@@ -157,7 +153,6 @@ class SampleDataTest(unittest.TestCase):
         spread+=spread2
         spread.writeCSV(path.join(self.theDir,"sample.csv"))
 
-theSuite.addTest(unittest.makeSuite(SampleDataTest,"test"))
 
 class SampleDataTestPrefix(unittest.TestCase):
     def setUp(self):
@@ -175,5 +170,3 @@ class SampleDataTestPrefix(unittest.TestCase):
         st=sd["0"]
         p=st[("line2","p_post")]
         p2=st[("line2","pre_p")]
-
-theSuite.addTest(unittest.makeSuite(SampleTimeTest,"test"))

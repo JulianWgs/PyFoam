@@ -1,6 +1,12 @@
 # -*- mode: org -*-
-* Version 0.6.11 - Not yet released
-** Major changes
+* Version 0.6.11 - 2019-10-31
+** Code structure
+*** Moved library into =src=-directory
+    To make sure that the =tox=-tests are not affected the library is
+    moved into the =src=-subdirectory
+*** Added Developer notes
+    Added a file =DeveloperNotes= with hints for people who want to
+    contribute
 ** Incompatibilities
 *** Behaviour reading =customRegexp=
     Macro expansion in the =customRegexp= might break it for some
@@ -10,7 +16,6 @@
 
     A potential problem is that the new implementation leaves files in
     the =/tmp= filesystem
-** New feature/utilities
 ** Enhancements to Utilities
 *** Replay data-files in =customRegexp=
     There are two new =type= s available in =customRegexp=: =data= and
@@ -119,11 +124,22 @@
     with =alternateAxis=
 *** =pyFoamBinarySize.py= now calculates documentation size as well
     If there is =html= documentation then this is counted as well
+*** =pyFoamCompareDictionary.py= allows specification of significant digits
+    When comparing numbers now the number of significant digits can be
+    specified. This only works for single numbers. Not compound types
+    like lists and vectors
 ** Enhancements to the Library
 *** =progress=-data is automatically converted to =float=
     When using format-strings for the =progress=-entry then the
     library automatically attempts to convert the data to =float=
     (otherwise it keeps it as =str=)
+*** Additional directories in =FoamInformation=
+    Two functions =foamCaseDicts()= and =foamPostProcessing()= have
+    been added that return the paths to these directories inside
+    =$FOAM_ETC=
+*** =BoolProxy= now works correctly with ~!=~
+    Added a method =__ne__= so that the results of the ~!=~ operator
+    are consistent with ~==~
 ** Bug fixes
 *** With dynamic plots names with =_slave= are problematic
     This made the slave plots that had =_slave= in the name fail
@@ -148,8 +164,21 @@
 *** =pyFoamBinarySize.py= did not count files in =build=
     Some distros have a directory =build= with the intermediate object
     files. This has not been counted until now
-** Infrastructure
-** ThirdParty
+*** Binary files with =ParsedParameterFile= not working in Python 3
+    Because Python 3 tries to encode read files as Unicode strings and
+    certain byte combinations are not valid UTF-8 encodings.
+
+    Hopefully fixed by reading the file as binary and then create a
+    =latin-1= encoded string
+
+    Reported in
+    https://sourceforge.net/p/openfoam-extend/ticketspyfoam/225/ by
+    Johan Hidding
+*** Improved handling of binary files in Python 2 and 3
+    Parts of the =FileBasis= class were not working correctly in
+    Python 3 because there strings are no longer 'lists of
+    bytes'. This has been adapted so that these parts work correctly
+    in Python 2 *and* 3 and unit tests have been added
 * Version 0.6.10 - 2018-08-12
   This is only a minor release with the main purpose to recognize
   OpenFOAM 6 installations with their new numbering scheme

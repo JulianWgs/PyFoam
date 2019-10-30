@@ -908,13 +908,13 @@ class SolutionDirectory(Utilities):
         else:
             return path.join(pre,"constant")
 
-    def systemDir(self,region=None):
+    def systemDir(self,region=None,noRegion=False):
         """:param region: Specify the region for cases with more than 1 mesh
         :return: the name of the C{system}-directory
         :rtype: str"""
         if region==None and self.region!=None:
             region=self.region
-        if region:
+        if region and not noRegion:
             return path.join(self.name,"system",region)
         else:
             return path.join(self.name,"system")
@@ -922,7 +922,7 @@ class SolutionDirectory(Utilities):
     def controlDict(self):
         """:return: the name of the C{controlDict}
         :rtype: str"""
-        return path.join(self.systemDir(),"controlDict")
+        return path.join(self.systemDir(noRegion=True),"controlDict")
 
     def polyMeshDir(self,region=None,time=None,processor=None):
         """:param region: Specify the region for cases with more than 1 mesh

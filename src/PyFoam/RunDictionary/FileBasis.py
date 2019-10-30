@@ -25,11 +25,14 @@ class FileBasis(Utilities):
     addedString="//PyFoamAdded"
     """Comment for lines that were added by PyFoam-routines"""
 
-    def __init__(self,name,createZipped=True):
+    def __init__(self,name,
+                 createZipped=True,
+                 useBinary=False):
         """:param name: Name of the file. If the field is zipped the .gz is
         appended. Alternatively it can be a filehandle
         :param createZipped: if the file doesnot exist: should it be created
         as a zipped file?"""
+        self.useBinary=useBinary
         if hasattr(name,"read"):
             self.name=None
             self.exists=True
@@ -79,6 +82,10 @@ class FileBasis(Utilities):
         """opens the file. To be overloaded by derived classes"""
         if not keepContent:
             self.content=None
+        if self.useBinary and mode.find("b")<0:
+            mode+="b"
+        elif mode.find("b")>=0:
+            self.useBinary=True
         if self.name:
             if self.zipped:
                 self.fh=gzip.open(self.name+".gz",mode)
@@ -99,6 +106,8 @@ class FileBasis(Utilities):
         txt=self.fh.read()
         if PY3 and self.zipped:
             txt=str(txt,"utf-8")
+        elif PY3 and self.useBinary:
+            txt=str(txt,encoding="latin-1")
         self.content=self.parse(txt)
         self.closeFile()
 
@@ -111,6 +120,8 @@ class FileBasis(Utilities):
             if self.content!=None:
                 self.openFile(keepContent=True,mode="w")
                 txt=str(self)
+                if bytes!=str and self.useBinary:
+                    txt=bytes(txt,"utf-8")
                 self.fh.write(self.encode(txt))
                 self.closeFile()
         else:
@@ -118,7 +129,7 @@ class FileBasis(Utilities):
 
     def encode(self,txt):
         """Encode a string to byte if necessary (for Python3)"""
-        if PY3 and self.zipped:
+        if PY3 and self.zipped and isinstance(txt,(str,)):
             return bytes(txt,"utf-8")
         else:
             return txt
@@ -301,7 +312,10 @@ class FileBasisBackup(FileBasis):
 
     counter={}
 
-    def __init__(self,name,backup=False,createZipped=True):
+    def __init__(self,name,
+                 backup=False,
+                 createZipped=True,
+                 useBinary=False):
         """:param name: The name of the parameter file
         :type name: str
         :param backup: create a backup-copy of the file
@@ -312,7 +326,10 @@ class FileBasisBackup(FileBasis):
                 warning(str(name),"is a file-handle. No backup possible")
             backup=False
 
-        FileBasis.__init__(self,name,createZipped=createZipped)
+        FileBasis.__init__(self,
+                           name,
+                           createZipped=createZipped,
+                           useBinary=useBinary)
 
         if backup:
             self.backupName=self.name+".backup"

@@ -1,11 +1,13 @@
+import pytest
 import unittest
+
+pandas = pytest.importorskip("pandas")
 
 from pandas import DataFrame,Series
 from PyFoam.Wrappers.Pandas import PyFoamDataFrame,PandasWrapperPyFoamException
 
 from math import isnan
 
-theSuite=unittest.TestSuite()
 
 class PyFoamDataFrameTest(unittest.TestCase):
     def setUp(self):
@@ -88,21 +90,21 @@ class PyFoamDataFrameTest(unittest.TestCase):
               pass
          dMaster=dMaster.addData(dSlave,mergeIndex=True)
          self.assertEqual(len(dMaster.keys()),4)
-         self.assert_(len(dMaster.index)>len(self.index1))
+         self.assertTrue(len(dMaster.index)>len(self.index1))
          self.assertEqual(min(dMaster.index),min(min(self.index1),min(self.index2)))
          self.assertEqual(max(dMaster.index),max(max(self.index1),max(self.index2)))
          for i,v in enumerate(self.index1):
               self.assertEqual(self.data1["a"][i],dMaster["a"][v])
               self.assertEqual(self.data1["b"][i],dMaster["b"][v])
               self.assertEqual(self.index1[i],dMaster.index[i])
-         self.assert_(dMaster["a"].map(isnan).any())
+         self.assertTrue(dMaster["a"].map(isnan).any())
          dMaster=PyFoamDataFrame(data=self.data1,index=self.index1)
          dMaster=dMaster.addData(dSlave,mergeIndex=True,allowExtrapolate=True)
-         self.assert_(not dMaster["a"].map(isnan).any())
+         self.assertTrue(not dMaster["a"].map(isnan).any())
          dMaster=PyFoamDataFrame(data=self.data1,index=self.index1)
          dSlave=PyFoamDataFrame(data=self.data2,index=self.index2a)
          dMaster=dMaster.addData(dSlave,mergeIndex=True)
-         self.assert_(dMaster["c"].map(isnan).any())
+         self.assertTrue(dMaster["c"].map(isnan).any())
 
     def testIntegrate(self):
         d=PyFoamDataFrame(data=self.data1,index=self.index1)
@@ -126,8 +128,6 @@ class PyFoamDataFrameTest(unittest.TestCase):
         self.assertAlmostEqual(descr["b"]["weighted average"],1.5)
         d["b"].values[:]=float("NaN")
         descr=d.describe()
-        self.assert_(isnan(descr["b"]["integral"]))
+        self.assertTrue(isnan(descr["b"]["integral"]))
         self.assertEqual(descr["b"]["valid length"],0)
-        self.assert_(isnan(descr["b"]["weighted average"]))
-
-theSuite.addTest(unittest.makeSuite(PyFoamDataFrameTest,"test"))
+        self.assertTrue(isnan(descr["b"]["weighted average"]))

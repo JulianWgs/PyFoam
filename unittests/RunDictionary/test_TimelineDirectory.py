@@ -9,7 +9,6 @@ from os import path,mkdir
 from shutil import rmtree
 from tempfile import mkdtemp
 
-theSuite=unittest.TestSuite()
 
 def destroyDirectory(theDir):
     if path.exists(theDir):
@@ -118,7 +117,6 @@ class TimelineDirectoryTest(unittest.TestCase):
         self.assertEqual(len(sd.getDataLocation(vectorMode="mag")),12)
         self.assertEqual(sd.positions(),  ['(0 0 1)', '(1 0 1)', '(2 0 1)', '(3 1 1)'])
 
-theSuite.addTest(unittest.makeSuite(TimelineDirectoryTest,"test"))
 
 class TimelineValueTest(unittest.TestCase):
     def setUp(self):
@@ -134,7 +132,7 @@ class TimelineValueTest(unittest.TestCase):
                                                    [0.0, 0.0, 1.0, 1.0],
                                                    [0.0, 0.0, 1.0, 1.0],
                                                    [1.0, 1.0, 1.0, 1.0]] )
-        self.assert_(st.isProbe())
+        self.assertTrue(st.isProbe())
         st=sd["h"]
         # this should be checked, but I don't want to
         self.assertEqual(st.getData([0.5,1,2,4]), [[0.0, 0.0, 0.0, 0.0],
@@ -147,7 +145,7 @@ class TimelineValueTest(unittest.TestCase):
         sd=TimelineDirectory(self.theDir,dirName="timeline")
         st=sd["p"]
         self.assertEqual(st.getData([0.5,1,2,4]),[[0.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, 0.0, 1.0], [1.0, 1.0, 1.0]])
-        self.assert_(not st.isProbe())
+        self.assertTrue(not st.isProbe())
         st=sd["h"]
         self.assertEqual(st.getData([0.5,1,2,4]), [[0.0, 0.0, 0.0], [0.0, 1.0], [0.0, 1.0], [1.0, 1.0, 1.0]])
         self.assertRaises(KeyError,sd.__getitem__,"ha")
@@ -173,7 +171,7 @@ class TimelineValueTest(unittest.TestCase):
         sd=TimelineDirectory(self.theDir,dirName="state")
         st=sd["state"]
         self.assertEqual(st.getData([0.5,1,2,4]),[['nix', 1.0], ['da', 2.0], ['da', 2.0], ['hier', 3.0]])
-        self.assert_(not st.isProbe())
+        self.assertTrue(not st.isProbe())
         spread=st()
 
         self.assertEqual(spread(-1,"state_t=0 state"),"")
@@ -200,5 +198,3 @@ class TimelineValueTest(unittest.TestCase):
         self.assertAlmostEqual(data["code"],2.85)
         import numpy as np
         self.assertEqual(spread.data.dtype[1].kind,"S")
-
-theSuite.addTest(unittest.makeSuite(TimelineValueTest,"test"))

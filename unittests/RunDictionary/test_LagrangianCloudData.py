@@ -1,5 +1,6 @@
+import pytest
 import unittest
 
-from PyFoam.RunDictionary.LagrangianCloudData import LagrangianCloudData
+pandas = pytest.importorskip("pandas")
 
-theSuite=unittest.TestSuite()
+from PyFoam.RunDictionary.LagrangianCloudData import LagrangianCloudData
