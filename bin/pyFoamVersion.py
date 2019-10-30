@@ -80,8 +80,10 @@ if PyFoam.FoamInformation.oldAppConvention():
     print_("  This version of OpenFOAM uses the old calling convention")
 print_()
 print_("pyFoam-Version:",PyFoam.versionString())
-hardcodedVersion=(0,6,11,"development") # Change in PyFoam/__init__.py as well
-# hardcodedVersion=(0,6,10)
+
+# hardcodedVersion=(0,6,12,"development") # Change in PyFoam/__init__.py as well
+hardcodedVersion=(0,6,11)
+
 if PyFoam.version()!=hardcodedVersion:
     print_("ALERT: Reported version",PyFoam.version(),
            "is different from hardcoded version",
