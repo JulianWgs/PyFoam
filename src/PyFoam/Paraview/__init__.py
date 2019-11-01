@@ -20,7 +20,7 @@ from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
 from math import sqrt
 from os import path
 
-from SourceBase import SourceBase
+from .SourceBase import SourceBase
 
 proxyManager=servermanager.ProxyManager()
 
