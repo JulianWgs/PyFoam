@@ -5,10 +5,10 @@ Class that implements pyFoamPVSnapshot
 
 from optparse import OptionGroup
 
-from PyFoamApplication import PyFoamApplication
-from PrepareCase import PrepareCase
+from .PyFoamApplication import PyFoamApplication
+from .PrepareCase import PrepareCase
 
-from CommonSelectTimesteps import CommonSelectTimesteps
+from .CommonSelectTimesteps import CommonSelectTimesteps
 
 from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
 from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile,FoamStringParser
@@ -18,6 +18,8 @@ from PyFoam.Paraview.StateFile import StateFile
 from PyFoam.Paraview import version as PVVersion
 
 from PyFoam.FoamInformation import foamVersion
+
+from PyFoam.ThirdParty.six import print_
 
 from os import path,unlink
 import sys,string
@@ -88,7 +90,7 @@ seems to change non-deterministically
         paraview.add_option("--type",
                             dest="picType",
                             type="choice",
-                            choices=self.picTypeTable.keys(),
+                            choices=list(self.picTypeTable.keys()),
                             default="png",
                             help="The type of the bitmap-file. Possibilities are "+", ".join(self.picTypeTable.keys())+". Default: %default")
         paraview.add_option("--no-progress",
@@ -137,7 +139,7 @@ seems to change non-deterministically
         geometry.add_option("--geometry-type",
                             dest="geomType",
                             type="choice",
-                            choices=self.geomTypeTable.keys(),
+                            choices=list(self.geomTypeTable.keys()),
                             default=None,
                             help="The type of the geometry-files. Possibilities are "+", ".join(self.geomTypeTable.keys())+". Default: unset. Nothing is written")
         geometry.add_option("--no-picture-with-geometry",
@@ -291,10 +293,7 @@ seems to change non-deterministically
     def say(self,*stuff):
         if not self.opts.verbose:
             return
-        print "Say:",
-        for s in stuff:
-            print s,
-        print
+        print_("Say:",*stuff)
 
     def setColorTransferFunction(self,name,rng):
         from paraview.simple import GetColorTransferFunction
@@ -465,29 +464,29 @@ seems to change non-deterministically
         sf=StateFile(self.opts.state)
 
         if self.opts.analyzeState:
-            print "\n\nReaders:\n   ","\n    ".join([p.type_()+" \t: "+p.getProperty("FileName") for p in sf.getProxy(".+Reader",regexp=True)])
-            print "Source Proxies:"
+            print_("\n\nReaders:\n   ","\n    ".join([p.type_()+" \t: "+p.getProperty("FileName") for p in sf.getProxy(".+Reader",regexp=True)]))
+            print_("Source Proxies:")
             for i,name in sf.sourceIds():
-                print "  ",name," \t: ",sf[i].type_()
+                print_("  ",name," \t: ",sf[i].type_())
             return
 
         if self.opts.listProperties:
-            print "\n\nProperties for",self.opts.listProperties,":"
+            print_("\n\nProperties for",self.opts.listProperties,":")
             srcs=[]
             for i,name in sf.sourceIds():
                 srcs.append(name)
                 if name==self.opts.listProperties:
                     for namee,el in sf[i].listProperties():
-                        print "  ",namee," \t: ",
+                        print_("  ",namee," \t: ",end=" ")
                         if len(el)==1:
-                            print "Single element:",el[0][1],
+                            print_("Single element:",el[0][1],end=" ")
                         elif len(el)>1:
-                            print len(el),"Elements:",
+                            print_(len(el),"Elements:",end=" ")
                             for j,v in el:
-                                print "%d:%s" % (j,v),
+                                print_("%d:%s" % (j,v),end=" ")
                         else:
-                            print "No value",
-                        print
+                            print_("No value",end=" ")
+                        print_()
                     return
             self.error("Not found. Available:"," ".join(srcs))
 
@@ -563,15 +562,15 @@ seems to change non-deterministically
             maxLen=100
             vLen=min(max([len(str(values[k])) for k in rKeys]),maxLen)
             kFormat=" %"+str(kLen)+"s | %"+str(vLen)+"s"
-            print
-            print kFormat % ("Key","Value")
-            print "-"*(kLen+2)+"|"+"-"*(vLen+2)
+            print_()
+            print_(kFormat % ("Key","Value"))
+            print_("-"*(kLen+2)+"|"+"-"*(vLen+2))
             for k in rKeys:
                 valStr=str(values[k])
                 if len(valStr)>maxLen:
                     valStr=valStr[:maxLen]+" .. cut"
-                print kFormat % (k,valStr)
-            print
+                print_(kFormat % (k,valStr))
+            print_()
 
         sf.rewriteTexts(values)
 
@@ -589,7 +588,7 @@ seems to change non-deterministically
             else:
                 self.error(setProp,"not a proper left side")
 
-            print "Setting on",src,"the property",prop,"index",index,"to",value
+            print_("Setting on",src,"the property",prop,"index",index,"to",value)
             srcs=[]
             for i,name in sf.sourceIds():
                 srcs.append(name)
@@ -612,7 +611,7 @@ seems to change non-deterministically
         newState=sf.writeTemp()
 
         if self.opts.rewriteOnly:
-            print "Written new statefile to",newState
+            print_("Written new statefile to",newState)
             return
 
         self.say("Setting session manager with reader type",sf.readerType())
@@ -668,7 +667,7 @@ seems to change non-deterministically
         self.say("Starting times",times[0][0],"(Index",times[0][1],")")
         for t,i in times:
             self.say("Nr",i,"time",t)
-            print "Snapshot ",i," for t=",t,
+            print_("Snapshot ",i," for t=",t,end=" ")
             sys.stdout.flush()
             self.say()
             layouts=[]
@@ -817,12 +816,12 @@ seems to change non-deterministically
 
             for j,view in enumerate(views):
                 if len(views)>0:
-                    print "View %d" % j,
+                    print_("View %d" % j,end=" ")
                     sys.stdout.flush()
                     self.say()
 
                 if doPic:
-                     print self.opts.picType,
+                     print_(self.opts.picType,end=" ")
                      sys.stdout.flush()
 
                      fn = (timeString % {'nr':i,'t':t,'view':j})+"."+self.opts.picType
@@ -915,12 +914,12 @@ seems to change non-deterministically
                 if doGeom:
                      from paraview.simple import Show,Hide,GetSources
 
-                     print self.opts.geomType,
+                     print_(self.opts.geomType,end=" ")
                      sys.stdout.flush()
                      for select in self.opts.sources:
                          fn = (timeString % {'nr':i,'t':t,'view':j})
                          if select!="":
-                             print "*"+select+"*",
+                             print_("*"+select+"*",end=" ")
                              sys.stdout.flush()
                              fn+="_"+select
                              sources=GetSources()
@@ -936,7 +935,7 @@ seems to change non-deterministically
                          ex.Write()
                 if doSources:
                     if self.opts.viewList:
-                        print "View Nr %s: Position %s Size: %s" % (viewReorder[j],view.GetProperty("ViewPosition"),view.GetProperty("ViewSize"))
+                        print_("View Nr %s: Position %s Size: %s" % (viewReorder[j],view.GetProperty("ViewPosition"),view.GetProperty("ViewSize")))
                     if self.opts.sourcesList:
                         from paraview.simple import GetSources
                         srcNames=[]
@@ -949,17 +948,17 @@ seems to change non-deterministically
                         else:
                              allSources|=set(srcNames)
                              alwaysSources&=set(srcNames)
-            print
+            print_()
 
         if doSources:
-             print
-             print "List of found sources (* means that it is present in all timesteps)"
+             print_()
+             print_("List of found sources (* means that it is present in all timesteps)")
              for n in allSources:
                   if n in alwaysSources:
                        flag="*"
                   else:
                        flag=" "
-                  print "  %s  %s" % (flag,n)
+                  print_("  %s  %s" % (flag,n))
 
         if createdDataFile:
             self.warning("Removing pseudo-data-file",dataFile)
