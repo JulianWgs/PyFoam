@@ -10,6 +10,8 @@ from paraview import servermanager
 from PyFoam.Paraview import version
 from PyFoam.FoamInformation import foamVersion
 
+from PyFoam.ThirdParty.six import print_
+
 if version()>=(3,6):
     from paraview.simple import LoadPlugin
     from paraview import simple
@@ -51,7 +53,7 @@ class ServermanagerWrapper(object):
                 # lib=ctypes.CDLL("/Users/bgschaid/OpenFOAM/ThirdParty-1.6/paraview-3.6.2/platforms/darwinIntel64/lib/paraview-3.6/libpqComponents.dylib",mode=ctypes.RTLD_GLOBAL)
                 lib=ctypes.CDLL(path.join(environ["FOAM_LIBBIN"],"libOpenFOAM.dylib"),mode=ctypes.RTLD_GLOBAL)
                 # lib=ctypes.CDLL(path.join(environ["FOAM_LIBBIN"],"paraview","libPV3FoamReader.dylib"),mode=ctypes.RTLD_GLOBAL)
-                print lib
+                print_(lib)
             elif uname()[0]=="Linux":
                 try:
                     import ctypes
@@ -84,7 +86,7 @@ class ServermanagerWrapper(object):
                                 LoadPlugin(path.join(p,plug1),ns=globals())
                             pass
                         except NameError:
-                            print dir(self.module())
+                            print_(dir(self.module()))
                             pass
                     else:
                         if plug1:

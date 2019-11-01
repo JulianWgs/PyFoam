@@ -13,6 +13,8 @@ from PyFoam.Error import error
 from PyFoam import configuration as config
 from tempfile import mkstemp
 
+from PyFoam.ThirdParty.six import print_
+
 class StateFile(object):
     """The actual PVSM-file
 
@@ -34,7 +36,7 @@ class StateFile(object):
         reader=self.getReader()
         caseDir=path.realpath(path.dirname(case))
         origPath=path.dirname(reader.getProperty("FileName"))
-        print "Setting Foam-file",origPath,"to",caseDir
+        print_("Setting Foam-file",origPath,"to",caseDir)
         typ=reader.data.getAttribute("type")
         if typ=="PV3FoamReader":
             reader.setProperty("FileName",case)
@@ -56,7 +58,7 @@ class StateFile(object):
                 for p in [oldPath,path.realpath(oldPath)]:
                     if p.find(origPath)==0:
                         newPath=path.join(caseDir,p[len(origPath)+1:])
-                        print "Rewriting path",oldPath,"to",newPath
+                        print_("Rewriting path",oldPath,"to",newPath)
                         r.setProperty("FileName",newPath)
 
     def setDecomposed(self,isDecomposed):
@@ -226,5 +228,4 @@ class Proxy(object):
                         except ValueError as e:
                             error("Problem with replacement",old,":",e)
                         if new!=old:
-                            # print "Replacing",old,"with",new
                             e.setAttribute("value",new)

@@ -2,7 +2,16 @@
 * Version 0.6.12 - Not releases
 ** New features/utilities
 ** Enhancements to the utilities
+*** Paraview-utilities now work in Paraviews that use Python 3
+    Newer versions of Paraview may use Python 3 as the
+    Python-interpreter which made =pyFoamPVSnapshot.py= fail.
+
+    The Paraview-utiliies (and the library as well) have been adapted
+    to work with Python 3 *and* 2
 ** Enhancements to the library
+*** Paraview-classes now work with Python 3
+    See above: /Paraview-utilities now work in Paraviews that use
+    Python 3/
 ** Bug fixes
 ** Incompatibilities
 ** Code structure
