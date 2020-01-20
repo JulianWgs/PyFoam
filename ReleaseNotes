@@ -8,10 +8,19 @@
 
     The Paraview-utiliies (and the library as well) have been adapted
     to work with Python 3 *and* 2
+*** Plotting utilities now plot progress of =snappyHexMesh=
+    The =pyFoamPlotRunner.py= and =pyFoamPlotWatcher.py= now allow
+    plotting the numbers of cells in different refinement levels in
+    =snappyHexMesh=
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
     Python 3/
+*** Mechanism to have =alternateTime= in single =customRegexp=
+    The entry =alternateTime= now allows to reference special
+    expressions that will serve as an alternate "time source". This
+    was for instance used to implement the progress graph for
+    =snappyHexMesh=
 ** Bug fixes
 ** Incompatibilities
 ** Code structure

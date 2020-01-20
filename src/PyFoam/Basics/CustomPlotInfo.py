@@ -65,6 +65,7 @@ class CustomPlotInfo(object):
         #        self.with_="points"
         self.type="regular";
         self.master=None
+        self.alternateTime=None
         self.progress=None
         self.enabled=enabled
         self.xlabel="Time [s]"

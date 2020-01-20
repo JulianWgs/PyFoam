@@ -401,6 +401,27 @@ Full command: |-commandLine-|""",
                 "titles" : ["nr"],
                 "theTitle" : "Number of Cells in the interface"
             }
+        },
+        "cellsPerLevel" : {
+            "solvers" : [ "snappyHexMesh.*" ],
+            "plotinfo" : {
+                "type" : "dynamic",
+                "theTitle" : "Cells per refinement level",
+                "logScale" : True,
+                "titles" : [ "nr" ],
+                "expr" : r"([0-9]+)\s+([0-9]+)",
+                "idNr" :  1,
+                "with" : "fsteps",
+                "xlabel" : "Steps",
+                "alternateTime" : "countrefinements"
+            }
+        },
+        "countRefinements" : {
+            "solvers" : [ "snappyHexMesh.*" ],
+            "plotinfo" : {
+                "type" : "count",
+                "expr" : "Cells per refinement level:"
+            }
         }
     }
 }

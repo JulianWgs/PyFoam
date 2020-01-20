@@ -2,6 +2,7 @@
 """Analyze OpenFOAM logs"""
 
 from .TimeLineAnalyzer import TimeLineAnalyzer
+from .CountLineAnalyzer import CountLineAnalyzer
 from PyFoam.Basics.LineReader import LineReader
 from PyFoam.Error import error
 
@@ -40,6 +41,7 @@ class FoamLogAnalyzer(object):
         else:
             self.progressOut=ProgressOutput()
 
+        # tm=CountLineAnalyzer()
         tm=TimeLineAnalyzer()
         self.addAnalyzer("Time",tm)
         tm.addListener(self.setTime)

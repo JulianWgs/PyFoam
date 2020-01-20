@@ -8,6 +8,7 @@ from PyFoam.Basics.PlotTimelinesFactory import createPlotTimelines,createPlotTim
 from PyFoam.Basics.TimeLineCollection import signedMax
 from PyFoam.LogAnalysis.RegExpLineAnalyzer import RegExpLineAnalyzer
 from PyFoam.LogAnalysis.PhaseChangerLineAnalyzer import PhaseChangerLineAnalyzer
+from PyFoam.LogAnalysis.CountLineAnalyzer import CountLineAnalyzer
 from PyFoam.LogAnalysis.ExecNameLineAnalyzer import ExecNameLineAnalyzer
 from PyFoam.LogAnalysis.ReplayDataFileAnalyzer import ReplayDataFileAnalyzer
 
@@ -378,6 +379,8 @@ class AnalyzedCommon(object):
         plots={}
         masters={}
         slaves=[]
+        canonical={}
+
         for i,custom in enumerate(customRegexp):
             if not custom.enabled:
                 continue
@@ -395,6 +398,10 @@ class AnalyzedCommon(object):
                 self.addAnalyzer(custom.name,
                                  PhaseChangerLineAnalyzer(custom.expr,
                                                           idNr=custom.idNr))
+                createPlot=False
+            elif custom.type=="count":
+                self.addAnalyzer(custom.name,
+                                 CountLineAnalyzer(custom.expr))
                 createPlot=False
             elif custom.type in ["dynamic","dynamicslave"]:
                 self.addAnalyzer(custom.name,
@@ -444,6 +451,8 @@ class AnalyzedCommon(object):
             else:
                 error("Unknown type",custom.type,"in custom expression",custom.name)
 
+            canonical[custom.id]=custom.name
+
             if createPlot:
                 if custom.master==None:
                     if custom.type in ["slave","dynamicslave","dataslave"]:
@@ -464,6 +473,13 @@ class AnalyzedCommon(object):
                         error("Specify alternate values in 'alternateAxis' of master",
                               custom.master,"for",custom.name)
                     slaves.append(custom)
+
+        for custom in customRegexp:
+            if custom.alternateTime:
+                self.getAnalyzer(custom.name).setParent(
+                    self.getAnalyzer(canonical[custom.alternateTime])
+                )
+                self.getAnalyzer(canonical[custom.alternateTime]).addTimeListener(self.getAnalyzer(custom.name))
 
         for s in slaves:
             if s.master not in masters:
