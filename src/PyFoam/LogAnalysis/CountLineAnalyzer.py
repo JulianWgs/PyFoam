@@ -4,22 +4,9 @@
 import re
 
 from .LogLineAnalyzer import LogLineAnalyzer
+from .TimeChanger import TimeChanger
 
 from PyFoam import configuration as conf
-
-class TimeChanger:
-    """Mixin the sends the special time to other classes"""
-
-    def __init__(self):
-        self._listener=[]
-
-    def addTimeListener(self,listener):
-        self._listener.append(listener)
-
-    def sendTime(self):
-        for listener in self._listener:
-            listener.timeChanged()
-        self.parent.setTime(self.getTime())
 
 class CountLineAnalyzer(LogLineAnalyzer,TimeChanger):
     """Parses the line for a regular expression and counts how often it occurs.
