@@ -407,7 +407,7 @@ Full command: |-commandLine-|""",
             "plotinfo" : {
                 "type" : "dynamic",
                 "theTitle" : "Cells per refinement level",
-                "logScale" : True,
+                "logscale" : True,
                 "titles" : [ "nr" ],
                 "expr" : r"([0-9]+)\s+([0-9]+)",
                 "idNr" :  1,
@@ -421,6 +421,14 @@ Full command: |-commandLine-|""",
             "plotinfo" : {
                 "type" : "count",
                 "expr" : "Cells per refinement level:"
+            }
+        },
+        "snappyPhases" : {
+            "solvers" : [ "snappyHexMesh.*" ],
+            "plotinfo" : {
+                "type" : "mark",
+                "expr" : ".+ phase$|^Stopping .*",
+                "targets" : [ "cellsperlevel" ]
             }
         }
     }

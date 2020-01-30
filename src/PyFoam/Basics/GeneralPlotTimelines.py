@@ -161,6 +161,11 @@ class GeneralPlotTimelines(object):
 
         notImplemented(self,"doReplot")
 
+    def addVerticalMarker(self):
+        """Add a vertical line to the graph at the current time"""
+
+        notImplemented(self,"addVerticalMarker")
+
     def actualSetTitle(self,title):
         """Sets the title"""
 

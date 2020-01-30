@@ -28,12 +28,6 @@ class StepAnalyzedCommon(AnalyzedCommon):
         self.oldtime=0.
         self.lastPickleDuration=0
         self.adaptFrequency=adaptFrequency
-        self.tickers=[]
-
-    def addTicker(self,ticker):
-        """Add a callable that will be called at every timestep"""
-        if ticker is not None:
-            self.tickers.append(ticker)
 
     def timeChanged(self):
         """React to a change of the simulation time in the log"""

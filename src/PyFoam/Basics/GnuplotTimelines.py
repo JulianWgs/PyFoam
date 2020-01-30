@@ -154,6 +154,16 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
         self.replot()
         # print("Replot out")
 
+    def addVerticalMarker(self):
+        """Add a vertical line to the graph at the current time"""
+
+        try:
+            tm=self.data.getTimes()[-1]
+        except IndexError:
+            return
+
+        self.set_string("arrow from %f,graph 0 to %f,graph 1 nohead" % (tm,tm))
+
     def actualSetTitle(self,title):
         """Sets the title"""
 

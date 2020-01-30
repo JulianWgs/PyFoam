@@ -9,6 +9,7 @@ from PyFoam.Basics.TimeLineCollection import signedMax
 from PyFoam.LogAnalysis.RegExpLineAnalyzer import RegExpLineAnalyzer
 from PyFoam.LogAnalysis.PhaseChangerLineAnalyzer import PhaseChangerLineAnalyzer
 from PyFoam.LogAnalysis.CountLineAnalyzer import CountLineAnalyzer
+from PyFoam.LogAnalysis.TriggerLineAnalyzer import TriggerLineAnalyzer
 from PyFoam.LogAnalysis.ExecNameLineAnalyzer import ExecNameLineAnalyzer
 from PyFoam.LogAnalysis.ReplayDataFileAnalyzer import ReplayDataFileAnalyzer
 
@@ -76,6 +77,14 @@ class AnalyzedCommon(object):
         eName.addListener(self.execNameFound)
         self.addAnalyzer("ExecName",eName)
         self.automaticCustom=None
+
+        self.tickers=[]
+        self.plots={}
+
+    def addTicker(self,ticker):
+        """Add a callable that will be called at every timestep"""
+        if ticker is not None:
+            self.tickers.append(ticker)
 
     def addPlots(self,plots):
         "Add plots. To be overriden"
@@ -183,7 +192,6 @@ class AnalyzedCommon(object):
                                                          splitThres=self.splitThres,
                                                          gnuplotTerminal=self.gnuplotTerminal,
                                                          plottingImplementation=self.plottingImplementation)
-                # plots.update(customPlots)
                 self.reset()
                 self.addPlots(automaticPlots)
 
@@ -352,6 +360,8 @@ class AnalyzedCommon(object):
             plots["execution"].setTitle("Execution Time")
             plots["execution"].setYLabel("Time [s]")
 
+        self.plots.update(plots)
+
         if customRegexp:
             customPlots=self.addCustomExpressions(customRegexp,
                                                   persist=persist,
@@ -367,7 +377,8 @@ class AnalyzedCommon(object):
 
         self.addPlots(plots)
 
-    def addCustomExpressions(self,customRegexp,
+    def addCustomExpressions(self,
+                             customRegexp,
                              persist=None,
                              start=None,
                              end=None,
@@ -380,6 +391,7 @@ class AnalyzedCommon(object):
         masters={}
         slaves=[]
         canonical={}
+        marks=[]
 
         for i,custom in enumerate(customRegexp):
             if not custom.enabled:
@@ -402,6 +414,12 @@ class AnalyzedCommon(object):
             elif custom.type=="count":
                 self.addAnalyzer(custom.name,
                                  CountLineAnalyzer(custom.expr))
+                createPlot=False
+            elif custom.type=="mark":
+                a=TriggerLineAnalyzer(custom.expr)
+                self.addAnalyzer(custom.name,
+                                 a)
+                marks.append((custom,a))
                 createPlot=False
             elif custom.type in ["dynamic","dynamicslave"]:
                 self.addAnalyzer(custom.name,
@@ -466,6 +484,7 @@ class AnalyzedCommon(object):
                                                                  advancedSplit=True)
                     plotCustom.setTitle(custom.theTitle)
                     plots["custom%04d" % i]=plotCustom
+                    self.plots[custom.id]=plotCustom
                 else:
                     if custom.type not in ["slave","dynamicslave","dataslave"]:
                         error("'master' only makes sense if type is 'slave' or 'dynamicslave' for",custom.name)
@@ -490,6 +509,20 @@ class AnalyzedCommon(object):
                 slave=self.getAnalyzer(s.name)
                 master=self.getAnalyzer(masters[s.master].name)
                 slave.setMaster(master)
+
+        for custom,analyzer in marks:
+            for pName in custom.targets:
+                try:
+                    p=self.plots[pName]
+                except KeyError as e:
+                    print_("Available plots:",list(self.plots.keys()))
+                    raise e
+
+                def mark(p):
+                    def makeMark():
+                        p.addVerticalMarker()
+                    return makeMark
+                analyzer.addFunction(mark(p))
 
         return plots
 

@@ -8,10 +8,18 @@
 
     The Paraview-utiliies (and the library as well) have been adapted
     to work with Python 3 *and* 2
+*** =customRegexp= has a type =mark= to add marks to the plots
+    Plots of =type mark= don't plot but there is a list =targets= with
+    names of other plots. Every time the =expr= matches a vertical
+    line is added to those plots.
+
+    Purpose of this type is to annotate singular events in the graphs
 *** Plotting utilities now plot progress of =snappyHexMesh=
     The =pyFoamPlotRunner.py= and =pyFoamPlotWatcher.py= now allow
     plotting the numbers of cells in different refinement levels in
     =snappyHexMesh=
+
+    Different phases are annotated with vertical lines
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
