@@ -20,6 +20,11 @@
     =snappyHexMesh=
 
     Different phases are annotated with vertical lines
+*** Plotting utilities now print available values of =type=
+    Instead of an obscure error message it now prints a list of the
+    available types and a short descriptions
+*** Missing attributes in =customRegexp=-specifications now give better error messages
+    Now the complete spec is printed (in addition to the missing attribute)
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use

@@ -393,6 +393,18 @@ class AnalyzedCommon(object):
         canonical={}
         marks=[]
 
+        plotTypes= [
+            ("regular"    , "Matches regular expression and plots"),
+            ("slave"      , "Plot data on a different plot (the 'master')"),
+            ("dynamic"    , "Dynamically creates lines depending on the match found at 'idNr'"),
+            ("dynamicslave" , "Combination of 'dynamic' and 'slave'"),
+            ("data"       , "Reads data from a file and plots it"),
+            ("dataslave"  , "Combination of 'data' and 'slave'"),
+            ("count"      , "Counts how often an expression occured (no plotting but used for 'alternateTime')"),
+            ("mark"       , "If the expression matches then a vertical marker is drawn on the 'targets'"),
+            ("phase"      , "Changes the phase prefix (for multi-region cases)")
+        ]
+
         for i,custom in enumerate(customRegexp):
             if not custom.enabled:
                 continue
@@ -404,6 +416,11 @@ class AnalyzedCommon(object):
             if end!=None:
                 custom.end=end
             custom.raiseit=raiseit
+
+            if custom.type not in [p[0] for p in plotTypes]:
+                error("type '{}' of custom plot '{}' not in known types:\n   {}".format(
+                    custom.type,custom.id,
+                    "\n   ".join(["{:15} : {}".format(n,d) for n,d in plotTypes])))
 
             createPlot=True
             if custom.type=="phase":

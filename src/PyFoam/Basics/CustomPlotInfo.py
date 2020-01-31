@@ -139,11 +139,14 @@ class CustomPlotInfo(object):
     def __str__(self):
         return makeString({self.id:self.getDict(wrapStrings=True)})
 
+    def __is_attribute(self,d):
+        return isinstance(getattr(self,d),(str,bool,int,list,dict,float)) and d.find("__")<0
+
     def getDict(self,wrapStrings=False):
         result={}
 
         for d in dir(self):
-            if (type(getattr(self,d))  in [str,bool,int,list,dict,float]) and d.find("__")<0:
+            if self.__is_attribute(d):
                 if d=="id" or d=="nr":
                     pass
                 else:
@@ -158,6 +161,11 @@ class CustomPlotInfo(object):
                 result[key]=val
         return result
 
+    def __getattr__(self,name):
+        if name.find("__")==0:
+            return
+
+        raise AttributeError("'{}' not in custom plot spec:\n{}".format(name,self))
 
 def readCustomPlotInfo(rawData,useName=None):
     """Determines which of the three possible formats for custom-plotting is used
