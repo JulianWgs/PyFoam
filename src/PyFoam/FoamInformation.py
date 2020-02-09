@@ -181,7 +181,7 @@ def findInstallationDir(newVersion):
             found.append((fork,version))
 
     if len(found)==0:
-        error("Can't find basedir for OpenFOAM-version",newVersion,"in",
+        error("Can't find basedir for OpenFOAM-version", newVersion, "in",
               ", ".join([ a[0]+"-"+a[1] for a in installed.keys() ]))
     elif len(found)==1:
         return found[0][0],found[0][1],installed[found[0]]
