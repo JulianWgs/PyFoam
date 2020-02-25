@@ -188,6 +188,7 @@ Full command: |-commandLine-|""",
         "DefaultParameterFile":"default.parameters",
         "AllowDerivedChanges":False,
         "ZipExtensionlessTemplateResults":False,
+        "ZipableExtensions": [],
         "ignoreDirectories": '"processor[0-9]+","postProcessing",".*.analyzed","VTK"'
     },
     "Template" : {
