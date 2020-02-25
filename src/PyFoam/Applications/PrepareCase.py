@@ -578,8 +578,8 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
                                expressionDelimiter=self.opts.expressionDelimiter,
                                assignmentDebug=self.pickAssignmentDebug(fName),
                                assignmentLineStart=self.opts.assignmentLineStart)
-                t.writeToFile(tName,values)
-                copymode(fName,tName)
+                written=t.writeToFile(tName,values)
+                copymode(fName,written)
 
     def overloadDir(self,here,there):
         """Copy files recursively. Overwrite local copies if they exist"""

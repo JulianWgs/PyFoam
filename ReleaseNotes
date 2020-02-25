@@ -12,8 +12,19 @@
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
     Python 3/
+*** =TemplateFile= now can write the result as zipped
+    The =writeFile=-method now has an optional parameter =gzip= that
+    forces the file to be written in compressed form with the
+    extension =.gz= added. If the file already has the extension =.gz=
+    it is assumed that =gzip= is set. If a file of the same name with
+    an extension =.gz= exists then it is assumed that this is to be
+    overwritten
 ** Bug fixes
 ** Incompatibilities
+*** =TemplateFile= writes to zipped file if it exists
+    The method =writeFile= looks for a file o the same name with =.gz=
+    added. If this exists then it is assumed that this should be
+    written (in zipped form)
 ** Code structure
 ** Infrastructure
 ** ThirdParty
