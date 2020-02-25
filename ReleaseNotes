@@ -8,6 +8,17 @@
 
     The Paraview-utiliies (and the library as well) have been adapted
     to work with Python 3 *and* 2
+*** =pyFoamPrepareCase.py= allows automatically zipping template results
+    The utility now allows automatically zipping the results of
+    template evaluations *if* the result file has no extension
+    (because then it can be assumed that these files are
+    OpenFOAM-dictionaries which are transparently unzipped).
+
+    This allows automatically ignoring this files with proper patterns
+    in =.gitignore= or =.hgignore=
+
+    This can be switched on via the command line or the
+    =LocalConfigPyFoam= file
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
