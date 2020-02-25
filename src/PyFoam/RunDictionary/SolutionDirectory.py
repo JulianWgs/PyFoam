@@ -1085,7 +1085,7 @@ class SolutionDirectory(Utilities):
         if directory:
             theDir=path.join(theDir,directory)
 
-        if path.exists(path.join(theDir,name)):
+        if path.exists(path.join(theDir,name)) or path.exists(path.join(theDir,name+".gz")):
             result=ParsedParameterFile(path.join(theDir,name)).content
         else:
             warning("File",name,"does not exist in directory",directory,"of case",self.name)

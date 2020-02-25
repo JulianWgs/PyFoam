@@ -53,6 +53,9 @@
     was for instance used to implement the progress graph for
     =snappyHexMesh=
 ** Bug fixes
+*** =auto= for the solver does not work with compressed =controlDict=
+    If the =controlDict= was compressed the value of the
+    =application=-entry could not be read. This has been fixed
 ** Incompatibilities
 *** =TemplateFile= writes to zipped file if it exists
     The method =writeFile= looks for a file o the same name with =.gz=
