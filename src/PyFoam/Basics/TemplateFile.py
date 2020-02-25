@@ -203,15 +203,32 @@ class TemplateFileOldFormat(object):
                           "The string",l,"is not")
                 self.expressions[tmp[0].strip()]=tmp[1]
 
-    def writeToFile(self,outfile,vals):
+    def writeToFile(self, outfile, vals, gzip=False):
         """In  the template, replaces all the strings between $$
         with the evaluation of the expressions and writes the results to a file
         :param outfile: the resulting output file
-        :param vals: dictionary with the values"""
+        :param vals: dictionary with the values
+        :param gzip: Zip the file (and add a .gz to the name)"""
 
-        output=self.getString(vals)
+        from os import path
 
-        open(outfile,"w").write(output)
+        output = self.getString(vals)
+
+        if path.splitext(outfile) == ".gz":
+            gzip = True
+        elif path.exists(outfile + ".gz"):
+            outfile += ".gz"
+            gzip = True
+        elif gzip:
+            outfile += ".gz"
+
+        if gzip:
+            import gzip as gz
+            gz.open(outfile, "wb").write(output)
+        else:
+            open(outfile, "w").write(output)
+
+        return outfile
 
     def getString(self,vals):
         """In the template, replaces all the strings between $$
