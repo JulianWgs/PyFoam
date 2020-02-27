@@ -24,6 +24,7 @@ def createPlotTimelines(timelines,
                         implementation=None,
                         gnuplotTerminal=None,
                         showWindow=True,
+                        quiet=False,
                         registry=None):
     """Creates a plotting object
     :param timelines: The timelines object
@@ -40,6 +41,7 @@ def createPlotTimelines(timelines,
 
     options={
         "showWindow" : showWindow,
+        "quiet"      : quiet,
         "registry"   : registry
     }
 
@@ -58,6 +60,7 @@ def createPlotTimelines(timelines,
 def createPlotTimelinesDirect(name,
                               timelines,
                               persist=None,
+                              quiet=False,
                               raiseit=True,
                               with_="lines",
                               alternateAxis=[],
@@ -100,6 +103,7 @@ def createPlotTimelinesDirect(name,
     ci.y2label=y2label
 
     return createPlotTimelines(timelines,ci,
+                               quiet=quiet,
                                implementation=implementation,
                                gnuplotTerminal=gnuplotTerminal)
 

@@ -28,6 +28,7 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
                  custom,
                  terminal="x11",
                  showWindow=True,
+                 quiet=False,
                  registry=None):
         """:param timelines: The timelines object
         :type timelines: TimeLineCollection
@@ -39,7 +40,7 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
         """
 
         GeneralPlotTimelines.__init__(self,timelines,custom,showWindow=showWindow,registry=registry)
-        Gnuplot.__init__(self,persist=self.spec.persist)
+        Gnuplot.__init__(self, persist=self.spec.persist, quiet=quiet)
 
         self.itemlist=[]
         self.terminal=terminal

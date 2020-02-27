@@ -185,6 +185,7 @@ class AnalyzedCommon(object):
 
                 automaticPlots=self.addCustomExpressions(self.automaticCustom,
                                                          persist=self.persist,
+                                                         quiet=self.quiet,
                                                          start=self.start_,
                                                          end=self.end,
                                                          raiseit=self.raiseit,
@@ -221,6 +222,7 @@ class AnalyzedCommon(object):
 
     def createPlots(self,
                     persist=None,
+                    quiet=False,
                     raiseit=False,
                     splitThres=2048,
                     plotLinear=True,
@@ -240,6 +242,7 @@ class AnalyzedCommon(object):
         plots={}
 
         self.persist=persist
+        self.quiet=quiet
         self.start_=start
         self.end=end
         self.raiseit=raiseit
@@ -252,6 +255,7 @@ class AnalyzedCommon(object):
             plots["linear"]=createPlotTimelinesDirect("linear",
                                                       self.getAnalyzer("Linear").lines,
                                                       persist=persist,
+                                                      quiet=quiet,
                                                       raiseit=raiseit,
                                                       forbidden=["final","iterations"],
                                                       start=start,
@@ -270,6 +274,7 @@ class AnalyzedCommon(object):
             plots["cont"]=createPlotTimelinesDirect("continuity",
                                                     self.getAnalyzer("Continuity").lines,
                                                     persist=persist,
+                                                    quiet=quiet,
                                                     alternateAxis=["Global"],
                                                     raiseit=raiseit,
                                                     start=start,
@@ -287,6 +292,7 @@ class AnalyzedCommon(object):
             plots["bound"]=createPlotTimelinesDirect("bounding",
                                                      self.getAnalyzer("Bounding").lines,
                                                      persist=persist,
+                                                     quiet=quiet,
                                                      raiseit=raiseit,
                                                      start=start,
                                                      end=end,
@@ -301,6 +307,7 @@ class AnalyzedCommon(object):
             plots["iter"]=createPlotTimelinesDirect("iterations",
                                                     self.getAnalyzer("Iterations").lines,
                                                     persist=persist,
+                                                    quiet=quiet,
                                                     with_="steps",
                                                     raiseit=raiseit,
                                                     start=start,
@@ -317,6 +324,7 @@ class AnalyzedCommon(object):
             plots["courant"]=createPlotTimelinesDirect("courant",
                                                        self.getAnalyzer("Courant").lines,
                                                        persist=persist,
+                                                       quiet=quiet,
                                                        raiseit=raiseit,
                                                        start=start,
                                                        end=end,
@@ -332,6 +340,7 @@ class AnalyzedCommon(object):
             plots["deltaT"]=createPlotTimelinesDirect("timestep",
                                                       self.getAnalyzer("DeltaT").lines,
                                                       persist=persist,
+                                                      quiet=quiet,
                                                       raiseit=raiseit,
                                                       start=start,
                                                       end=end,
@@ -348,6 +357,7 @@ class AnalyzedCommon(object):
             plots["execution"]=createPlotTimelinesDirect("execution",
                                                          self.getAnalyzer("Execution").lines,
                                                          persist=persist,
+                                                         quiet=quiet,
                                                          with_="steps",
                                                          raiseit=raiseit,
                                                          start=start,
@@ -365,6 +375,7 @@ class AnalyzedCommon(object):
         if customRegexp:
             customPlots=self.addCustomExpressions(customRegexp,
                                                   persist=persist,
+                                                  quiet=quiet,
                                                   start=start,
                                                   end=end,
                                                   raiseit=raiseit,
@@ -380,6 +391,7 @@ class AnalyzedCommon(object):
     def addCustomExpressions(self,
                              customRegexp,
                              persist=None,
+                             quiet=False,
                              start=None,
                              end=None,
                              raiseit=False,
@@ -494,6 +506,7 @@ class AnalyzedCommon(object):
                         error("Custom expression",custom.name,"is supposed to be a 'slave' but no master is defined")
                     masters[custom.id]=custom
                     plotCustom=createPlotTimelines(self.getAnalyzer(custom.name).lines,
+                                                   quiet=quiet,
                                                    custom=custom,
                                                    gnuplotTerminal=gnuplotTerminal,
                                                    implementation=plottingImplementation)

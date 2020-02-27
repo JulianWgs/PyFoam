@@ -36,6 +36,11 @@
     available types and a short descriptions
 *** Missing attributes in =customRegexp=-specifications now give better error messages
     Now the complete spec is printed (in addition to the missing attribute)
+*** Option =--quiet-plot= for plotting utilities swallows output of the plotting program
+    =gnuplot= sometimes outputs error messages which mess up the
+    =ncurses=-output. The =--quiet-plot=-option swallows this
+    output. This behaviour is *not* the default because sometimes this
+    output is useful
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
@@ -52,6 +57,9 @@
     expressions that will serve as an alternate "time source". This
     was for instance used to implement the progress graph for
     =snappyHexMesh=
+*** =quiet=-option added to plotting implementations
+    This option tells the plotting program to not output anything to
+    the terminal. Currently only works for =Gnuplot=
 ** Bug fixes
 *** =auto= for the solver does not work with compressed =controlDict=
     If the =controlDict= was compressed the value of the
@@ -64,6 +72,10 @@
 ** Code structure
 ** Infrastructure
 ** ThirdParty
+*** Modification to =Gnuplot=-library
+    There has been a =quiet=-option added that swallows all terminal
+    output of =gnuplot=. This only works in the
+    Unix/Linux-implementation. All others ignore it
 * Version 0.6.11 - 2019-10-31
 ** Code structure
 *** Moved library into =src=-directory

@@ -117,6 +117,7 @@ read and the regular expressions in it are displayed
         run=GnuplotRunner(argv=self.replaceAutoInArgs(self.parser.getArgs()),
                           smallestFreq=self.opts.frequency,
                           persist=self.opts.persist,
+                          quiet=self.opts.quietPlot,
                           plotLinear=self.opts.linear,
                           plotCont=self.opts.continuity,
                           plotBound=self.opts.bound,

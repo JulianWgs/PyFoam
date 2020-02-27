@@ -1,4 +1,4 @@
-# $Id: gp_mac.py 292 2006-03-03 09:49:04Z mhagger $
+# $Id$
 
 # Copyright (C) 1999-2003 Michael Haggerty <mhagger@alum.mit.edu>
 # Thanks to Tony Ingraldi and Noboru Yamamoto for their contributions.
@@ -84,7 +84,7 @@ class GnuplotProcess:
 
     """
 
-    def __init__(self, persist=0):
+    def __init__(self, persist=0, quiet=False):
         """Start a gnuplot process.
 
         Create a 'GnuplotProcess' object.  This starts a gnuplot

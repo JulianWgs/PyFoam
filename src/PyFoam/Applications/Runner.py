@@ -51,6 +51,7 @@ class Runner(PyFoamApplication,
 
     def __init__(self,
                  args=None,
+                 quiet=False,
                  **kwargs):
         description="""\
 Runs an OpenFoam solver.  Needs the usual 3 arguments (<solver>

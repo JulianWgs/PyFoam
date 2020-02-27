@@ -1,4 +1,4 @@
-# $Id: gp_unix.py 292 2006-03-03 09:49:04Z mhagger $
+# $Id$
 
 # Copyright (C) 1998-2003 Michael Haggerty <mhagger@alum.mit.edu>
 #
@@ -110,7 +110,7 @@ class GnuplotOpts:
 
 # ############ End of configuration options ############################
 
-from os import popen
+from os import popen,popen4
 
 
 def test_persist():
@@ -164,7 +164,7 @@ class GnuplotProcess:
 
     """
 
-    def __init__(self, persist=None):
+    def __init__(self, persist=None, quiet=False):
         """Start a gnuplot process.
 
         Create a 'GnuplotProcess' object.  This starts a gnuplot
@@ -180,16 +180,21 @@ class GnuplotProcess:
 
         """
 
+        self.out = None
         if persist is None:
             persist = GnuplotOpts.prefer_persist
         if persist:
             if not test_persist():
                 raise Exception('-persist does not seem to be supported '
                                 'by your version of gnuplot!')
-            self.gnuplot = popen('%s -persist' % GnuplotOpts.gnuplot_command,
-                                 'w')
+            cmd = '%s -persist' % GnuplotOpts.gnuplot_command
         else:
-            self.gnuplot = popen(GnuplotOpts.gnuplot_command, 'w')
+            cmd = GnuplotOpts.gnuplot_command
+
+        if quiet:
+            self.gnuplot, self.out = popen4(cmd, "w")
+        else:
+            self.gnuplot, self.out = popen(cmd, "w"), None
 
         # forward write and flush methods:
         self.write = self.gnuplot.write

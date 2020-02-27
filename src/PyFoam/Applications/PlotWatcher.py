@@ -163,6 +163,7 @@ the extension '.logfile' in the directory and uses that
         run=GnuplotWatcher(logFile,
                            smallestFreq=self.opts.frequency,
                            persist=self.opts.persist,
+                           quiet=self.opts.quietPlot,
                            tailLength=self.opts.tail,
                            silent=self.opts.silent or (self.opts.longProgress and self.cursesWindow),
                            hardcopy=self.opts.hardcopy,
