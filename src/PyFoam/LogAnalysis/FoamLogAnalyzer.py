@@ -33,6 +33,7 @@ class FoamLogAnalyzer(object):
         self.line=LineReader(config().getboolean("SolverOutput","stripSpaces"))
         self.timeListeners=[]
         self.timeTriggers=[]
+        self.resetFileTriggers=[]
 
         self.customExpr=re.compile("Custom([0-9]+)_(.+)")
 
@@ -162,6 +163,9 @@ class FoamLogAnalyzer(object):
         for nm in self.analyzers:
             self.analyzers[nm].resetFile()
 
+        for f in self.resetFileTriggers:
+            f()
+
     def writeProgress(self,msg):
         """Write a message to the progress output"""
         self.progressOut(msg)
@@ -173,6 +177,9 @@ class FoamLogAnalyzer(object):
             error("Error. Object has no timeChanged-method:"+str(listener))
         else:
             self.timeListeners.append(listener)
+
+    def addResetFileTrigger(self,f):
+        self.resetFileTriggers.append(f)
 
     def listAnalyzers(self):
         """:returns: A list with the names of the Analyzers"""

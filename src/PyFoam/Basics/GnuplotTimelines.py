@@ -155,7 +155,10 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
         self.replot()
         # print("Replot out")
 
-    def addVerticalMarker(self):
+    def rgb2spec(self,rgb):
+        return "#"+"".join(["{:02X}".format(min(255,max(0,int(255*c)))) for c in rgb])
+
+    def addVerticalMarker(self,colorRGB=None,label=None):
         """Add a vertical line to the graph at the current time"""
 
         try:
@@ -163,7 +166,15 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
         except IndexError:
             return
 
-        self.set_string("arrow from %f,graph 0 to %f,graph 1 nohead" % (tm,tm))
+        if colorRGB:
+            colorstring=' linecolor "%s"' % self.rgb2spec(colorRGB)
+        else:
+            colorstring=""
+
+        self.set_string(("arrow from %f,graph 0 to %f,graph 1 nohead" % (tm,tm))+colorstring)
+
+        if label:
+            self.set_string('label "%s" at %f,graph 0.5 center rotate' % (label,tm))
 
     def actualSetTitle(self,title):
         """Sets the title"""

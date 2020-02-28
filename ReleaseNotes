@@ -41,6 +41,10 @@
     =ncurses=-output. The =--quiet-plot=-option swallows this
     output. This behaviour is *not* the default because sometimes this
     output is useful
+*** Colored markers in =pyFoamPlotWatcher= for logfiles from restarts
+    If following a file which has =.restartXX=-files then when the
+    file is changed a red marker line with the label "Restart" is
+    shown in all the plots
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use

@@ -42,6 +42,7 @@ class AnalyzedCommon(object):
             filename=filenames
 
         self.analyzer=analyzer
+        self.analyzer.addResetFileTrigger(self.resetFile)
 
         if 'dir' in dir(self):
             self.logDir=path.join(self.dir,filename+".analyzed")
@@ -593,5 +594,11 @@ class AnalyzedCommon(object):
     def setDataSet(self,data):
         if hasattr(self,"data"):
             self.data["analyzed"]=data
+
+    def resetFile(self):
+        """The input file changed and we add a marker to all plots"""
+        for n in self.plots:
+            p = self.plots[n]
+            p.addVerticalMarker(colorRGB=(1.,0,0),label="Restart")
 
 # Should work with Python3 and Python2
