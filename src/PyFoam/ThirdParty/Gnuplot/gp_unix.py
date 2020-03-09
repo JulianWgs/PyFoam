@@ -1,4 +1,4 @@
-# $Id$
+# $Id: gp_unix.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 
 # Copyright (C) 1998-2003 Michael Haggerty <mhagger@alum.mit.edu>
 #
@@ -110,8 +110,8 @@ class GnuplotOpts:
 
 # ############ End of configuration options ############################
 
-from os import popen,popen4
-
+from os import popen
+import subprocess
 
 def test_persist():
     """Determine whether gnuplot recognizes the option '-persist'.
@@ -192,7 +192,10 @@ class GnuplotProcess:
             cmd = GnuplotOpts.gnuplot_command
 
         if quiet:
-            self.gnuplot, self.out = popen4(cmd, "w")
+            p = subprocess.Popen(cmd, shell=True, bufsize=-1,
+                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT, close_fds=True)
+            self.gnuplot, self.out = (p.stdin, p.stdout)
         else:
             self.gnuplot, self.out = popen(cmd, "w"), None
 
