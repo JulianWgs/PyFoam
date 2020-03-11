@@ -15,6 +15,8 @@ interfaces.
 
 """
 
+from PyFoam.ThirdParty.six import PY3
+
 # ############ Configuration variables: ################################
 
 class GnuplotOpts:
@@ -214,7 +216,12 @@ class GnuplotProcess:
     def __call__(self, s):
         """Send a command string to gnuplot, followed by newline."""
 
-        self.write(s + '\n')
+        s += "\n"
+
+        if PY3:
+            s = s.encode()
+
+        self.write(s)
         self.flush()
 
 # Should work with Python3 and Python2
