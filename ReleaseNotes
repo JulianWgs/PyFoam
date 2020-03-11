@@ -68,6 +68,9 @@
 *** =auto= for the solver does not work with compressed =controlDict=
     If the =controlDict= was compressed the value of the
     =application=-entry could not be read. This has been fixed
+*** =FileBasisBackup= now works with zipped file
+    If a file is already zipped then the =FileBasisBackup= class could
+    not create a backup file and failed. This works now
 ** Incompatibilities
 *** =TemplateFile= writes to zipped file if it exists
     The method =writeFile= looks for a file o the same name with =.gz=

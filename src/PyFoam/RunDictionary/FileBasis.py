@@ -337,21 +337,32 @@ class FileBasisBackup(FileBasis):
                 FileBasisBackup.counter[self.name]+=1
             except KeyError:
                 FileBasisBackup.counter[self.name]=1
-                self.copyfile(self.name,self.backupName)
+                if self.zipped:
+                    self.copyfile(self.name+".gz",self.backupName+".gz")
+                else:
+                    self.copyfile(self.name,self.backupName)
         else:
             self.backupName=None
 
     def restore(self):
         """if a backup-copy was made the file is restored from this"""
-        if self.backupName!=None:
-            FileBasisBackup.counter[self.name]-=1
-            if FileBasisBackup.counter[self.name]==0:
-                self.copyfile(self.backupName,self.name)
-                self.remove(self.backupName)
+        if self.backupName is not None:
+            FileBasisBackup.counter[self.name] -= 1
+            if FileBasisBackup.counter[self.name] == 0:
+                if self.zipped:
+                    bkpName = self.backupName + ".gz"
+                    fileName = self.name + ".gz"
+                else:
+                    bkpName = self.backupName
+                    fileName = self.name
+
+                self.copyfile(bkpName, fileName)
+                self.remove(bkpName)
                 del FileBasisBackup.counter[self.name]
 
+
 def exists(name):
-    f=FileBasis(name)
+    f = FileBasis(name)
     return f.exists
 
 # Should work with Python3 and Python2
