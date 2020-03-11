@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: AnalyzedCommon.py,v 3f8df529776e 2020-02-28 20:07:20Z bgschaid $
 """Common stuff for classes that use analyzers"""
 
 from os import path,mkdir
@@ -457,7 +457,7 @@ class AnalyzedCommon(object):
                                                     custom.expr,
                                                     titles=custom.titles,
                                                     doTimelines=True,
-                                                    doFiles=writeFiles,
+                                                    doFiles=writeFiles or custom.writeFiles,
                                                     accumulation=custom.accumulation,
                                                     dataTransformations=custom.dataTransformations,
                                                     progressTemplate=custom.progress,
@@ -473,7 +473,7 @@ class AnalyzedCommon(object):
                                                     custom.expr,
                                                     titles=custom.titles,
                                                     doTimelines=True,
-                                                    doFiles=writeFiles,
+                                                    doFiles=writeFiles or custom.writeFiles,
                                                     accumulation=custom.accumulation,
                                                     dataTransformations=custom.dataTransformations,
                                                     progressTemplate=custom.progress,

@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: CustomPlotInfo.py,v 52a98a5ace0c 2020-01-31 21:09:38Z bgschaid $
 """Information about custom plots"""
 
 from PyFoam.Basics.TimeLineCollection import TimeLineCollection
@@ -84,6 +84,7 @@ class CustomPlotInfo(object):
         self.skip_header=0
         self.stripCharacters=None
         self.replaceFirstLine=None
+        self.writeFiles=False
 
         # Legacy format
         if raw==None:

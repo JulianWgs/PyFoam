@@ -45,6 +45,11 @@
     If following a file which has =.restartXX=-files then when the
     file is changed a red marker line with the label "Restart" is
     shown in all the plots
+*** =writeFiles= in a =customRegexp=-entry writes scanned output to file
+    If a line
+: writeFiles yes;
+    is added to an entry in =customRegexp= then the data is written to
+    a file as well. These files are found in the =.analyzed=-folder
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
