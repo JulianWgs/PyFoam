@@ -221,7 +221,11 @@ class GnuplotProcess:
         if PY3:
             s = s.encode()
 
-        self.write(s)
+        try:
+            self.write(s)
+        except TypeError:
+            self.write(s.decode())
+
         self.flush()
 
 # Should work with Python3 and Python2
