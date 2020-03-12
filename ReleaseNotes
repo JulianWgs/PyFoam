@@ -31,6 +31,10 @@
     =snappyHexMesh=
 
     Different phases are annotated with vertical lines
+*** Plotting utilities now plot progress of =foamyHexMesh=
+    The =pyFoamPlotRunner.py= and =pyFoamPlotWatcher.py= now allow
+    plotting the numbers of inserted points and the total displacement
+    and distance of =foamyHexMesh=
 *** Plotting utilities now print available values of =type=
     Instead of an obscure error message it now prints a list of the
     available types and a short descriptions
