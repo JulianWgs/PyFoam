@@ -80,6 +80,10 @@
 *** =FileBasisBackup= now works with zipped file
     If a file is already zipped then the =FileBasisBackup= class could
     not create a backup file and failed. This works now
+*** Case with zipped =controlDict= not recognized as a valid case
+    If the =controlDict= was zipped for some reason then PyFoam (and
+    therefor utilities like =pyFoamListCase.py=) did not recognize it
+    as a valid case
 ** Incompatibilities
 *** =TemplateFile= writes to zipped file if it exists
     The method =writeFile= looks for a file o the same name with =.gz=
