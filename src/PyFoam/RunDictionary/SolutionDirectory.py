@@ -261,7 +261,7 @@ class SolutionDirectory(Utilities):
             missing.append(self.constantDir())
         elif not path.isdir(self.constantDir()):
             missing.append(self.constantDir())
-        if not path.exists(self.controlDict()):
+        if not path.exists(self.controlDict()) and not path.exists(self.controlDict()+".gz"):
             missing.append(self.controlDict())
 
         return missing
