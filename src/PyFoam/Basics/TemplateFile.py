@@ -227,6 +227,12 @@ class TemplateFileOldFormat(object):
             if PY3:
                 output = output.encode()
             gz.open(outfile, "wb").write(output)
+            unzipped=path.splitext(outfile)[0]
+            if path.exists(unzipped):
+                 warning("Removing",unzipped,"because it might shadow generated",
+                         outfile)
+                 from os import unlink
+                 unlink(unzipped)
         else:
             open(outfile, "w").write(output)
 

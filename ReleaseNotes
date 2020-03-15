@@ -64,7 +64,9 @@
     extension =.gz= added. If the file already has the extension =.gz=
     it is assumed that =gzip= is set. If a file of the same name with
     an extension =.gz= exists then it is assumed that this is to be
-    overwritten
+    overwritten. If a file is written zipped and the same file without
+    =.gz= exists then it is removed to avoid confusion which file will
+    be used
 *** Mechanism to have =alternateTime= in single =customRegexp=
     The entry =alternateTime= now allows to reference special
     expressions that will serve as an alternate "time source". This
