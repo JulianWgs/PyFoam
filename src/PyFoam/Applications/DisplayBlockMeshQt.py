@@ -20,8 +20,8 @@ from PyFoam.ThirdParty.six import print_,PY3
 import sys
 
 def doImports():
-    if PY3:
-        error("The VTK-library currently only supports Python 2.x. You're using Python3")
+    if not PY3:
+        error("This utility does not support Python 2.x")
     try:
         global QtGui,QtCore
         from PyQt4 import QtGui,QtCore
@@ -39,13 +39,13 @@ def doImports():
         global vtkVersion
         vtkVersion=vtk.VTK_MAJOR_VERSION
         print_("VTK version",vtkVersion)
-        if vtkVersion==5:
+        if vtkVersion==7:
             # currently the only supported VTK
             pass
         elif vtkVersion<5:
             error("Need at least VTK 5")
         else:
-            warning("VTK version",vtkVersion,"currently unsupported")
+            warning("VTK version",vtkVersion,"currently unsupported (tested with VTK7)")
 
         global QVTKRenderWindowInteractor
         from vtk.qt4 import QVTKRenderWindowInteractor
@@ -130,7 +130,7 @@ class DisplayBlockMeshDialog(QtGui.QMainWindow):
         central.setLayout(layout)
         self.renInteractor=QVTKRenderWindowInteractor.QVTKRenderWindowInteractor(central)
         #        self.renInteractor.Initialize() # this creates a segfault for old PyQt
-        self.renInteractor.Start()
+        #        self.renInteractor.Start()  # segfault
 
         layout.addWidget(self.renInteractor)
 
@@ -415,8 +415,17 @@ class DisplayBlockMeshDialog(QtGui.QMainWindow):
 
         self.setupBlockingGui()
 
-        self.restoreGeometry(QtCore.QSettings().value("geometry").toByteArray())
-        self.restoreState(QtCore.QSettings().value("state").toByteArray())
+        storedGeometry=QtCore.QSettings().value("geometry")
+        if storedGeometry is not None:
+            self.restoreGeometry(storedGeometry)
+        else:
+            print("No stored window geometry")
+
+        storedState=QtCore.QSettings().value("state")
+        if storedState is not None:
+            self.restoreState(storedState)
+        else:
+            print("No stored state")
 
         self.setStatus()
 
@@ -845,7 +854,6 @@ class DisplayBlockMeshDialog(QtGui.QMainWindow):
     def showTmpBlock(self):
         """Add a colored block"""
         append=vtk.vtkAppendPolyData()
-
         b=self.tmpBlock
         self.addInputToPolyData(append,self.makeFace([b[0],b[1],b[2],b[3]]))
         self.addInputToPolyData(append,self.makeFace([b[4],b[5],b[6],b[7]]))
@@ -1284,7 +1292,6 @@ class DisplayBlockMeshDialog(QtGui.QMainWindow):
             self.blockAxisActor=None
         if newBlock>=0:
             append=vtk.vtkAppendPolyData()
-
             b=self.blocks[newBlock]
 
             self.addInputToPolyData(append,self.makeFace([b[0],b[1],b[2],b[3]]))
@@ -1341,8 +1348,8 @@ class DisplayBlockMeshDialog(QtGui.QMainWindow):
 
     def closeEvent(self,event):
         print_("Closing and saving settings to",QtCore.QSettings().fileName())
-        QtCore.QSettings().setValue("geometry",QtCore.QVariant(self.saveGeometry()))
-        QtCore.QSettings().setValue("state",QtCore.QVariant(self.saveState()))
+        QtCore.QSettings().setValue("geometry",self.saveGeometry())
+        QtCore.QSettings().setValue("state",self.saveState())
 
 class DisplayBlockMesh(PyFoamApplicationQt4,
                        CommonTemplateFormat):
@@ -1396,4 +1403,4 @@ This is a new version with a QT-GUI
             self.error("Problem with blockMesh file",bmFile)
         self.dialog.show()
 
-# Should work with Python3 and Python2
+# Should work with Python3
