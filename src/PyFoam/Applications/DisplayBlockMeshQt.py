@@ -115,7 +115,15 @@ class DisplayBlockMeshDialog(QtGui.QMainWindow):
 
         self.caseDir=None
         try:
-            caseDir=path.sep+path.join(*path.abspath(fName).split(path.sep)[:-3])
+            components=path.abspath(fName).split(path.sep)
+            if components[-2]=="polyMesh":
+                # old scheme with blockMeshDict in constant/polyMesh
+                components=components[:-3]
+            else:
+                # new scheme with blockMeshDict in system
+                components=components[:-2]
+
+            caseDir=path.sep+path.join(*components)
             isOK=NoTouchSolutionDirectory(caseDir)
             if isOK:
                 self.caseDir=caseDir
