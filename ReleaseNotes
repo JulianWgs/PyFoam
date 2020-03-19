@@ -75,6 +75,13 @@
 *** =quiet=-option added to plotting implementations
     This option tells the plotting program to not output anything to
     the terminal. Currently only works for =Gnuplot=
+*** The =[]=-operator of the =PyFoamDataFrame= is now more flexible
+    If that operator gets a single numeric value or a list of numbers
+    it gets the rows where the index (usually the time) is nearest to
+    the number(s) and returns a =PyFoamDataFrame=
+
+    All other keys are passed to the "usual" =[]=-operator of the
+    =DataFrame= but the result is converted to a =PyFoamDataFrame=
 ** Bug fixes
 *** =auto= for the solver does not work with compressed =controlDict=
     If the =controlDict= was compressed the value of the
@@ -100,6 +107,15 @@
     It is not typically run on computation servers (which mostly still
     have Python 2) so the extra effort to support this outdated
     version of Python is not worth it
+*** Constructor of =PyFoamDataFrame= is more restrictive
+    The constructor now checks if
+    - the index has a number type
+    - the index is strictly monothonic
+    because most additional algorithms (=integrate()= etc) rely on
+    these assumptions
+*** =[]=-operator of =PyFoamDataFrame= returns a =PyFoamDataFrame=
+    The old behaviour of this was to return a =DataFrame=. Shouldn't
+    break existing code but makes it easier to chain indexes
 ** Code structure
 ** Infrastructure
 ** ThirdParty

@@ -10,6 +10,9 @@ from PyFoam.Error import error, warning, PyFoamException
 
 from PyFoam.ThirdParty.six import string_types, text_type, u
 
+import pandas.api.types as pdtypes
+import numpy as np
+import pandas as pd
 
 class PyFoamDataFrame(DataFrame):
     """This class adds some convenience functions to the regular Datafram class"""
@@ -21,15 +24,32 @@ class PyFoamDataFrame(DataFrame):
         super(PyFoamDataFrame, self).__init__(*args, **kwargs)
         if not self.__allStrings():
             raise PandasWrapperPyFoamException("Columns must be strings")
-        # if not self.axes[0].is_unique:
-        #     # not working as expected
-        #     #            self.drop_duplicates(inplace=True)
-        #     self.axes[0].is_unique=True
+
+        if not pdtypes.is_numeric_dtype(self.index.dtype):
+            raise TypeError(
+                "Index '{}' is of type {} which is not a numberic type".format(
+                    self.index.name, self.index.dtype
+                )
+            )
+
+        if not self.index.is_monotonic_increasing:
+            raise TypeError(
+                "Index '{}' should be monothinc increasing. It is not".format(
+                    self.index.name
+                )
+            )
 
     def __allStrings(self, keys=None):
         if keys is None:
             keys = self.keys()
-        return keys.map(lambda k: isinstance(k, string_types)).all()
+        if isinstance(keys,pd.MultiIndex):
+            for key in keys:
+                for k in key:
+                    if not isinstance(k,string_types):
+                        return False
+            return True
+        else:
+            return keys.map(lambda k: isinstance(k, string_types)).all()
 
     def addData(
         self,
@@ -187,6 +207,39 @@ class PyFoamDataFrame(DataFrame):
         d = d.append(DataFrame(data=a, index=["weighted average"]))
         return d
 
+    def __getitem__(self, key):
+        """If this gets a number as the key it tries to get the row that is
+        nearest to this number. If it is something list-like and the elements
+        of the lists are numbers then all the elements of the list are looked
+        up, sorted and mad unique. Afterwards it gets the rows that are nearest
+        to the numbers. Otherwise it defaults to the []-operator of the
+        DataFram-class but converts the result to a PyFoamDataFrame
+
+        """
+        idx = None
+        if isinstance(key, (float, int)):
+            idx = [Series(abs(self.index - key)).idxmin()]
+        elif pdtypes.is_list_like(key):
+            try:
+                k = np.array(key)
+                if pdtypes.is_numeric_dtype(k) and not pdtypes.is_bool_dtype(k):
+                    idx = []
+                    for i in k:
+                        nx = Series(abs(self.index - i)).idxmin()
+                        if nx not in idx:
+                            idx.append(nx)
+                        idx.sort()
+            except TypeError:
+                pass
+
+        if idx is not None:
+            return PyFoamDataFrame(self.iloc[idx])
+
+        val = DataFrame.__getitem__(self, key)
+        if isinstance(val, DataFrame):
+            return PyFoamDataFrame(val)
+        else:
+            return val
 
 class PandasWrapperPyFoamException(PyFoamException):
     """The PyFoam-exception that does not expect to be caught"""
