@@ -25,6 +25,8 @@ class PyFoamDataFrame(DataFrame):
         if not self.__allStrings():
             raise PandasWrapperPyFoamException("Columns must be strings")
 
+        if self.shape == (0, 0):
+            return
         if not pdtypes.is_numeric_dtype(self.index.dtype):
             raise TypeError(
                 "Index '{}' is of type {} which is not a numberic type".format(
