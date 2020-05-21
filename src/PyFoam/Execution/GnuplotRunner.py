@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: GnuplotRunner.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 """Runner that outputs the residuals of the linear solver with Gnuplot"""
 
 from .StepAnalyzedCommon import StepAnalyzedCommon
@@ -140,6 +140,7 @@ class GnuplotRunner(GnuplotCommon,BasicRunner):
                  smallestFreq=0.,
                  persist=None,
                  quiet=False,
+                 splitThres=2048,
                  plotLinear=True,
                  plotCont=True,
                  plotBound=True,
@@ -195,6 +196,7 @@ class GnuplotRunner(GnuplotCommon,BasicRunner):
                                smallestFreq=smallestFreq,
                                persist=persist,
                                quiet=quiet,
+                               splitThres=splitThres,
                                plotLinear=plotLinear,
                                plotCont=plotCont,
                                plotBound=plotBound,
@@ -239,6 +241,7 @@ class GnuplotWatcher(GnuplotCommon,BasicWatcher):
                  smallestFreq=0.,
                  persist=None,
                  quiet=False,
+                 splitThres=2048,
                  silent=False,
                  tailLength=1000,
                  sleep=0.1,
@@ -280,6 +283,7 @@ class GnuplotWatcher(GnuplotCommon,BasicWatcher):
                                smallestFreq=smallestFreq,
                                persist=persist,
                                quiet=quiet,
+                               splitThres=splitThres,
                                plotLinear=plotLinear,
                                plotCont=plotCont,
                                plotBound=plotBound,

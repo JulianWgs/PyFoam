@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: PlotRunner.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 """
 Class that implements pyFoamPlotRunner
 """
@@ -118,6 +118,7 @@ read and the regular expressions in it are displayed
                           smallestFreq=self.opts.frequency,
                           persist=self.opts.persist,
                           quiet=self.opts.quietPlot,
+                          splitThres=self.opts.splitDataPointsThreshold if self.opts.doSplitDataPoints else None,
                           plotLinear=self.opts.linear,
                           plotCont=self.opts.continuity,
                           plotBound=self.opts.bound,

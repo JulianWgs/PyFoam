@@ -31,6 +31,7 @@ class AnalyzedCommon(object):
     def __init__(self,
                  filenames,
                  analyzer,
+                 splitThres=2048,
                  doPickling=True):
         """:param filename: name of the file that is being analyzed
         :param analyzer: the analyzer itself
@@ -70,7 +71,7 @@ class AnalyzedCommon(object):
         self.end=None
         self.raiseit=False
         self.writeFiles=False
-        self.splitThres=2048
+        self.splitThres=splitThres
         self.plottingImplementation="dummy"
         self.gnuplotTerminal=None
 

@@ -54,6 +54,13 @@
 : writeFiles yes;
     is added to an entry in =customRegexp= then the data is written to
     a file as well. These files are found in the =.analyzed=-folder
+*** Modifying splitting behavior for plot data
+    Plotting data is reduced from time to time if the number of data
+    points exceeds a certain threshold. Usually this threshold
+    is 2048. Now for most runner utilities (and the =PlotWatcher=)
+    there are two additional options: =--split-data-points-threshold=
+    allows setting the number of data points to a different value than
+    2048 and =--no-split-data-points=  to switch off splitting altogether
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use

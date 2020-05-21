@@ -96,6 +96,7 @@ stopped and the last simulation state is written to disk
                                                   singleFile=self.opts.singleDataFilesOnly,
                                                   doTimelines=True),
                               silent=self.opts.progress or self.opts.silent,
+                              splitThres=self.opts.splitDataPointsThreshold if self.opts.doSplitDataPoints else None,
                               argv=self.parser.getArgs(),
                               restart=self.opts.restart,
                               server=self.opts.server,
@@ -110,6 +111,7 @@ stopped and the last simulation state is written to disk
                               jobId=self.opts.jobId)
 
         run.createPlots(customRegexp=self.lines_,
+                        splitThres=self.opts.splitDataPointsThreshold if self.opts.doSplitDataPoints else None,
                         writeFiles=self.opts.writeFiles)
 
         if self.cursesWindow:

@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: StepAnalyzedCommon.py,v dee8aef639e2 2020-01-30 23:47:00Z bgschaid $
 """Common stuff for classes that do something at every timestep"""
 
 from PyFoam.ThirdParty.six import print_
@@ -14,6 +14,7 @@ class StepAnalyzedCommon(AnalyzedCommon):
     def __init__(self,
                  filename,
                  analyzer,
+                 splitThres=2048,
                  writePickled=True,
                  smallestFreq=0,
                  adaptFrequency=True):
@@ -21,6 +22,7 @@ class StepAnalyzedCommon(AnalyzedCommon):
         AnalyzedCommon.__init__(self,
                                 filename,
                                 analyzer,
+                                splitThres=splitThres,
                                 doPickling=writePickled)
 
         analyzer.addTimeListener(self)
