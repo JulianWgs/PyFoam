@@ -95,6 +95,9 @@
 *** =pyFoamAddCaseDataToDatabase.py= allows updating data
     The =--update= switch allows updating the data for runs. Otherwise
     if the run already exists in the database the utility will fail
+*** =RunDatabase= gets method =modify=
+    This method allows updating a run with a unique id by specifying a
+    (nested) dictionary with the values
 ** Bug fixes
 *** =auto= for the solver does not work with compressed =controlDict=
     If the =controlDict= was compressed the value of the

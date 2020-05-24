@@ -108,6 +108,32 @@ class RunDatabase(object):
 
         self.db.commit()
 
+    def modify(self, unique_id, data):
+        """Modify a dataset for which we have a unique id with the data in a dictionary"""
+
+        update_run = self.get_runID(unique_id)
+        if update_run is None:
+            raise KeyError("Unique ID {} not in database".format(unique_id))
+
+        self.__adaptDatabase(data)
+
+        runData = dict([(k, v) for k, v in iteritems(data) if type(v) != dict])
+        runID = self.__addContent(self.TheRunsName,
+                                  runData,
+                                  update_run=update_run)
+
+        if update_run is not None:
+            runID = update_run
+
+        subtables = dict([(k, v) for k, v in iteritems(data) if type(v) == dict])
+        for tn, content in iteritems(subtables):
+            self.__addContent(tn+"Data",
+                              dict(list(self.__flattenDict(content).items())+
+                                   [(self.run_id, runID)]),
+                              update_run=update_run)
+
+        self.db.commit()
+
     specialChars={
         '[':'bro',
         ']':'brc',
@@ -167,7 +193,13 @@ class RunDatabase(object):
         return result
 
     def __addContent(self, table, data, update_run=None):
-        cursor=self.db.cursor()
+        cursor = self.db.cursor()
+        if len(data) == 0:
+            if self.verbose:
+                print_("No data. Nothing done")
+            cursor.close()
+            return None
+
         runData={}
         for k,v in iteritems(data):
             if k==self.run_id:
@@ -188,15 +220,29 @@ class RunDatabase(object):
             cSQL = "insert into "+table+" ("+ \
                 ",".join(['"'+self.__normalize(c)+'"' for c in cols])+ \
                 ") values ("+",".join(["?"]*len(addData))+")"
+            sqlData = addData
         else:
-            cSQL = "update "+table+" set "+ \
+            dataCursor = self.db.cursor()
+            dataCursor.execute("SELECT * FROM {} WHERE {}=?".format(table,
+                                                                    self.run_id),
+                               (update_run, ))
+            dataHere = dataCursor.fetchall()
+            if len(dataHere) < 1:
+                cSQL = "insert into {} ( {} ) values ( {} )".format(table,
+                                                                    self.run_id,
+                                                                    update_run)
+                if self.verbose:
+                    print_("Execute SQL", cSQL, "to add an aerelmost empty row")
+                cursor.execute(cSQL)
+            cols = [c for c in cols if c in data]
+            cSQL = "update " + table + " set " + \
                 " , ".join(['"{}" = ?'.format(self.__normalize(c)) for c in cols]) + \
                 " where {} = ?".format(self.run_id)
-            addData = addData + (update_run,)
+            sqlData = tuple(runData[c] for c in cols) + (update_run,)
         if self.verbose:
-            print_("Execute SQL",cSQL,"with",addData)
+            print_("Execute SQL",cSQL,"with",sqlData)
         try:
-            cursor.execute(cSQL, addData)
+            cursor.execute(cSQL, sqlData)
         except Exception:
             e = sys.exc_info()[1] # Needed because python 2.5 does not support 'as e'
             print_("SQL-Expression:",cSQL)
