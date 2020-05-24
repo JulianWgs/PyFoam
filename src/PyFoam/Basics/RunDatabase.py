@@ -22,7 +22,10 @@ class RunDatabase(object):
     Database with information about runs. To be queried etc
     """
 
-    separator="//"
+    separator = "//"
+    unique_id = "uniqueid"
+    run_id = "runId"
+    TheRunsName = "theRuns"
 
     def __init__(self,
                  name,
@@ -47,23 +50,61 @@ class RunDatabase(object):
         with db:
             db.row_factory=sqlite3.Row
             cursor=db.cursor()
-            cursor.execute("CREATE TABLE theRuns(runId INTEGER PRIMARY KEY, "+
-                           self.__normalize("insertionTime")+" TIMESTAMP)")
+            cursor.execute("CREATE TABLE theRuns({} INTEGER PRIMARY KEY, ".format(self.run_id) +
+                           self.__normalize("insertionTime") + " TIMESTAMP)")
             cursor.close()
 
-    def add(self,data):
+    def id_exists(self, theId):
+        return self.get_runID(theId) is not None
+
+    def get_runID(self, uniqueId):
+        if uniqueId is None:
+            return None
+        runCols = self.__getColumns(self.TheRunsName)
+        if self.unique_id not in runCols:
+            return None
+        dataCursor = self.db.cursor()
+        dataCursor.execute("SELECT * FROM {} WHERE {}=?".format(self.TheRunsName,
+                                                                self.unique_id),
+                           (uniqueId, ))
+        data = dataCursor.fetchall()
+        if len(data) < 1:
+            return None
+        else:
+            return data[0][self.run_id]
+
+    def add(self, data, update_existing=False):
         """Add a dictionary with data to the database"""
         self.__adaptDatabase(data)
 
-        runData=dict([("insertionTime",datetime.datetime.now())]+ \
-                [(k,v) for k,v in iteritems(data) if type(v)!=dict])
-        runID=self.__addContent("theRuns",runData)
+        try:
+            unique = data[self.unique_id]
+        except KeyError:
+            unique = None
 
-        subtables=dict([(k,v) for k,v in iteritems(data) if type(v)==dict])
-        for tn,content in iteritems(subtables):
+        exists = self.id_exists(unique)
+
+        if exists and not update_existing:
+            raise KeyError("Run with key {} already in database".format(unique))
+
+        runData = dict([("insertionTime", datetime.datetime.now())] +
+                       [(k, v) for k, v in iteritems(data) if type(v) != dict])
+
+        update_run = self.get_runID(unique)
+
+        runID = self.__addContent(self.TheRunsName,
+                                  runData,
+                                  update_run=update_run)
+
+        if update_run is not None:
+            runID = update_run
+
+        subtables = dict([(k, v) for k, v in iteritems(data) if type(v) == dict])
+        for tn, content in iteritems(subtables):
             self.__addContent(tn+"Data",
                               dict(list(self.__flattenDict(content).items())+
-                                   [("runId",runID)]))
+                                   [(self.run_id, runID)]),
+                              update_run=update_run)
 
         self.db.commit()
 
@@ -83,7 +124,7 @@ class RunDatabase(object):
         """Normalize a column-name so that the case-insensitve column-names of SQlite
         are no problem"""
 
-        if s in ["runId","dataId"]:
+        if s in [self.run_id,"dataId"]:
             return s
         result=""
         for c in s:
@@ -125,11 +166,11 @@ class RunDatabase(object):
 
         return result
 
-    def __addContent(self,table,data):
+    def __addContent(self, table, data, update_run=None):
         cursor=self.db.cursor()
         runData={}
         for k,v in iteritems(data):
-            if k=="runId":
+            if k==self.run_id:
                 runData[k]=v
             elif isinstance(v,integer_types+(float,)):
                 runData[k]=float(v)
@@ -143,9 +184,15 @@ class RunDatabase(object):
             except KeyError:
                 addData.append(None)
         addData=tuple(addData)
-        cSQL = "insert into "+table+" ("+ \
-               ",".join(['"'+self.__normalize(c)+'"' for c in cols])+ \
-               ") values ("+",".join(["?"]*len(addData))+")"
+        if update_run is None:
+            cSQL = "insert into "+table+" ("+ \
+                ",".join(['"'+self.__normalize(c)+'"' for c in cols])+ \
+                ") values ("+",".join(["?"]*len(addData))+")"
+        else:
+            cSQL = "update "+table+" set "+ \
+                " , ".join(['"{}" = ?'.format(self.__normalize(c)) for c in cols]) + \
+                " where {} = ?".format(self.run_id)
+            addData = addData + (update_run,)
         if self.verbose:
             print_("Execute SQL",cSQL,"with",addData)
         try:
@@ -170,13 +217,15 @@ class RunDatabase(object):
         indata=dict([(k,v) for k,v in iteritems(data) if type(v)!=dict])
         subtables=dict([(k,v) for k,v in iteritems(data) if type(v)==dict])
 
-        self.__addColumnsToTable("theRuns",indata)
+        self.__addColumnsToTable(self.TheRunsName,indata)
 
         for tn,content in iteritems(subtables):
             if tn+"Data" not in tables:
                 if self.verbose:
                     print_("Adding table",tn)
-                self.db.execute("CREATE TABLE "+tn+"Data (dataId INTEGER PRIMARY KEY, runId INTEGER)")
+                self.db.execute(
+                    "CREATE TABLE {}Data (dataId INTEGER PRIMARY KEY, {} INTEGER)".format(
+                        tn, self.run_id))
             self.__addColumnsToTable(tn+"Data",
                                      self.__flattenDict(content))
 
@@ -193,7 +242,7 @@ class RunDatabase(object):
         c=self.db.execute('SELECT * from '+tablename)
         result=[]
         for desc in c.description:
-            if desc[0] in ['dataId','runId']:
+            if desc[0] in ['dataId',self.run_id]:
                 result.append(desc[0])
             else:
                 result.append(self.__denormalize(desc[0]))
@@ -240,7 +289,7 @@ class RunDatabase(object):
         disabledStandard=set()
 
         for d in runCursor:
-            id=d['runId']
+            id=d[self.run_id]
             if self.verbose:
                 print_("Dumping run",id)
             for k in list(d.keys()):
@@ -256,12 +305,12 @@ class RunDatabase(object):
                     else:
                         disabledStandard.add(k)
             for t in tables:
-                if t=="theRuns":
+                if t==self.TheRunsName:
                     namePrefix="runInfo"
                 else:
                     namePrefix=t[:-4]
                 dataCursor=self.db.cursor()
-                dataCursor.execute("SELECT * FROM "+t+" WHERE runId=?",
+                dataCursor.execute("SELECT * FROM "+t+" WHERE {}=?".format(self.run_id),
                                    (str(id),))
                 data=dataCursor.fetchall()
                 if len(data)>1:
@@ -270,7 +319,7 @@ class RunDatabase(object):
                 elif len(data)<1:
                     continue
                 for k in list(data[0].keys()):
-                    if k in ["dataId","runId"]:
+                    if k in ["dataId", self.run_id]:
                         continue
                     if k in disabledStandard:
                         continue

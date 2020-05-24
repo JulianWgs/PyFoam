@@ -89,6 +89,12 @@
 
     All other keys are passed to the "usual" =[]=-operator of the
     =DataFrame= but the result is converted to a =PyFoamDataFrame=
+*** Each run started by =BasicRunner= has a unique ID
+    Each run gets a unique id. This allows to easily find out whether
+    the data is from the same run
+*** =pyFoamAddCaseDataToDatabase.py= allows updating data
+    The =--update= switch allows updating the data for runs. Otherwise
+    if the run already exists in the database the utility will fail
 ** Bug fixes
 *** =auto= for the solver does not work with compressed =controlDict=
     If the =controlDict= was compressed the value of the
@@ -123,6 +129,14 @@
 *** =[]=-operator of =PyFoamDataFrame= returns a =PyFoamDataFrame=
     The old behaviour of this was to return a =DataFrame=. Shouldn't
     break existing code but makes it easier to chain indexes
+*** =RunDatabase= fails if the same unique ID is inserted again
+    If a dataset with the same unique ID is added with =add= for a
+    second time the method fails with a =KeyError= unless the
+    =update_existing=-flag is set
+
+    This has the potential to beak old code (which probably wouldn't
+    work correctly anyway as the old behaviour was to add the data for
+    the rum for a second time)
 ** Code structure
 ** Infrastructure
 ** ThirdParty
