@@ -70,6 +70,7 @@ class CustomPlotInfo(object):
         self.enabled=enabled
         self.xlabel="Time [s]"
         self.ylabel=None
+        self.xvalue=None
         self.gnuplotCommands=[]
         self.enhanced=False
         self.stringValues=None

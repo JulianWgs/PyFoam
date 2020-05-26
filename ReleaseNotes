@@ -61,6 +61,24 @@
     there are two additional options: =--split-data-points-threshold=
     allows setting the number of data points to a different value than
     2048 and =--no-split-data-points=  to switch off splitting altogether
+*** Parametric plots with =xvalue= in =customRegexp=
+    If an entry =xvalue= is found in a =customRegexp=-specification
+    then the value with that name is *not* plotted but used instead of
+    the time as the $x$-coordinate for the plot. So something like
+#+begin_src c++
+highspeedLocation {
+    theTitle "Location of the highest velocity";
+    expr "Expression highSpeedLoc :  min=\((.+) (.+) .+\)";
+    titles (
+        x
+        y
+    );
+    xlabel "x";
+    ylabel "y";
+    xvalue x;
+}
+#+end_src
+    plots the location of the highest speed
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use

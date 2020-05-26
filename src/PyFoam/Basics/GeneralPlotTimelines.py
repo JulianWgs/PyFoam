@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: GeneralPlotTimelines.py,v 3f8df529776e 2020-02-28 20:07:20Z bgschaid $
 """Plots a collection of timelines. General superclass for te other implementations"""
 
 from PyFoam.Basics.CustomPlotInfo import readCustomPlotInfo,CustomPlotInfo
@@ -125,8 +125,13 @@ class GeneralPlotTimelines(object):
 
         self.preparePlot()
 
-        names=self.getNames()
+        names = self.getNames()
+        times = []
+
         for n in names:
+            if self.spec.xvalue is not None and self.spec.xvalue == n:
+                continue
+
             title=n
 
             if title.rfind("-slave")>=0:
@@ -135,7 +140,10 @@ class GeneralPlotTimelines(object):
                 lastValid=self.data.slaves[slaveNr].lastValid[title]
             else:
                 lastValid=self.data.lastValid[title]
-            times=self.data.getTimes(title)
+            if self.spec.xvalue:
+                times = self.data.getValues(self.spec.xvalue)
+            else:
+                times = self.data.getTimes(title)
             self.buildData(times,n,title,lastValid)
 
         if len(names)>0 and len(times)>0:
