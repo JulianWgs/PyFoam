@@ -5,7 +5,10 @@ http://code.activestate.com/recipes/578797-public-key-encryption-rsa/"""
 
 from __future__ import division, absolute_import
 from base64 import b32encode,b32decode
-from fractions import gcd
+try:
+    from fractions import gcd
+except ImportError:
+    from math import gcd
 from random import randrange
 from collections import namedtuple
 from math import log
