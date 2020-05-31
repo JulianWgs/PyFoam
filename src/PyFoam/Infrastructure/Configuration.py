@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: Configuration.py,v 0605f57b0731 2020-02-25 14:25:33Z bgschaid $
 """Reads configuration-files that define defaults for various PyFoam-Settings
 
 Also hardcodes defaults for the settings"""
@@ -402,6 +402,66 @@ Full command: |-commandLine-|""",
                 "expr" : r"Number of isoAdvector surface cells = (\S+)",
                 "titles" : ["nr"],
                 "theTitle" : "Number of Cells in the interface"
+            }
+        },
+        "cellsPerLevel" : {
+            "solvers" : [ "snappyHexMesh.*" ],
+            "plotinfo" : {
+                "type" : "dynamic",
+                "theTitle" : "Cells per refinement level",
+                "logscale" : True,
+                "titles" : [ "nr" ],
+                "expr" : r"([0-9]+)\s+([0-9]+)",
+                "idNr" :  1,
+                "with" : "fsteps",
+                "xlabel" : "Steps",
+                "alternateTime" : "countrefinements"
+            }
+        },
+        "countRefinements" : {
+            "solvers" : [ "snappyHexMesh.*" ],
+            "plotinfo" : {
+                "type" : "count",
+                "expr" : "Cells per refinement level:"
+            }
+        },
+        "snappyPhases" : {
+            "solvers" : [ "snappyHexMesh.*" ],
+            "plotinfo" : {
+                "type" : "mark",
+                "expr" : ".+ phase$|^Stopping .*",
+                "targets" : [ "cellsperlevel" ]
+            }
+        },
+        "foamyTotalDistance" : {
+            "solvers" : ["foamyHexMesh"],
+            "plotinfo" : {
+                "expr" : "Total distance = (.+)",
+                "theTitle" : "Total distance/displacement",
+                "titles" : ["distance"],
+                "alternateAxis" : ["distance"],
+                "ylabel" : "Displacement",
+                "y2label" : "Distance"
+            }
+        },
+        "foamyTotalDisplacement" : {
+            "solvers" : ["foamyHexMesh"],
+            "plotinfo" : {
+                "type" : "slave",
+                "master" : "foamytotaldistance",
+                "expr" : r"Total displacement = \((.+) (.+) (.+)\)",
+                "titles" : ["x","y","z"]
+            }
+        },
+        "foamyInserted" : {
+            "solvers" : ["foamyHexMesh"],
+            "plotinfo" : {
+                "theTitle" : "Inserted Points",
+                "expr" : r"(.+) points inserted, failed to insert ([0-9]+) .+",
+                "titles" : ["inserted","failed"],
+                "ylabel" : "Inserted",
+                "y2label" : "Failed",
+                "alternateAxis" : ["failed"]
             }
         }
     }

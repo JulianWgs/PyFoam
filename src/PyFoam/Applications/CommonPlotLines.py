@@ -120,6 +120,23 @@ class CommonPlotLines(object):
 
         self.parser.add_option_group(grp2)
 
+        grp3 = OptionGroup(self.parser,
+                           "Data reduction",
+                           "How data will be reduced to less numbers if the amount of data points becomes to large")
+        grp3.add_option("--split-data-points-threshold",
+                        action="store",
+                        default=2048,
+                        dest="splitDataPointsThreshold",
+                        type="int",
+                        help="If the number of data points exceeds the threshold then the number of data points is reduced. Default: %default")
+        grp3.add_option("--no-split-data-points",
+                        action="store_false",
+                        default=True,
+                        dest="doSplitDataPoints",
+                        help="Do no do the splitting of data")
+
+        self.parser.add_option_group(grp3)
+
     def processPlotLineOptions(self,autoPath=None):
         """Process the options that have to do with plot-lines"""
 

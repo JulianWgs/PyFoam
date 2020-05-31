@@ -1,4 +1,4 @@
-# $Id: gp_unix.py 292 2006-03-03 09:49:04Z mhagger $
+# $Id: gp_unix.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 
 # Copyright (C) 1998-2003 Michael Haggerty <mhagger@alum.mit.edu>
 #
@@ -14,6 +14,8 @@ should be imported via 'import Gnuplot' rather than these low-level
 interfaces.
 
 """
+
+from PyFoam.ThirdParty.six import PY3
 
 # ############ Configuration variables: ################################
 
@@ -111,7 +113,7 @@ class GnuplotOpts:
 # ############ End of configuration options ############################
 
 from os import popen
-
+import subprocess
 
 def test_persist():
     """Determine whether gnuplot recognizes the option '-persist'.
@@ -164,7 +166,7 @@ class GnuplotProcess:
 
     """
 
-    def __init__(self, persist=None):
+    def __init__(self, persist=None, quiet=False):
         """Start a gnuplot process.
 
         Create a 'GnuplotProcess' object.  This starts a gnuplot
@@ -180,16 +182,24 @@ class GnuplotProcess:
 
         """
 
+        self.out = None
         if persist is None:
             persist = GnuplotOpts.prefer_persist
         if persist:
             if not test_persist():
                 raise Exception('-persist does not seem to be supported '
                                 'by your version of gnuplot!')
-            self.gnuplot = popen('%s -persist' % GnuplotOpts.gnuplot_command,
-                                 'w')
+            cmd = '%s -persist' % GnuplotOpts.gnuplot_command
         else:
-            self.gnuplot = popen(GnuplotOpts.gnuplot_command, 'w')
+            cmd = GnuplotOpts.gnuplot_command
+
+        if quiet:
+            p = subprocess.Popen(cmd, shell=True, bufsize=-1,
+                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT, close_fds=True)
+            self.gnuplot, self.out = (p.stdin, p.stdout)
+        else:
+            self.gnuplot, self.out = popen(cmd, "w"), None
 
         # forward write and flush methods:
         self.write = self.gnuplot.write
@@ -206,7 +216,16 @@ class GnuplotProcess:
     def __call__(self, s):
         """Send a command string to gnuplot, followed by newline."""
 
-        self.write(s + '\n')
+        s += "\n"
+
+        if PY3:
+            s = s.encode()
+
+        try:
+            self.write(s)
+        except TypeError:
+            self.write(s.decode())
+
         self.flush()
 
 # Should work with Python3 and Python2

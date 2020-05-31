@@ -354,7 +354,7 @@ class TimeLineCollection(object):
     def getTimes(self,name=None):
         """:return: A list of the time values"""
         tm=None
-        if name in self.values or name==None:
+        if name in self.values or name is None:
             tm=self.times
         else:
             for s in self.slaves:

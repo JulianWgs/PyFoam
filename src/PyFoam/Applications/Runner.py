@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: Runner.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 """
 Application class that implements pyFoamRunner
 """
@@ -51,6 +51,7 @@ class Runner(PyFoamApplication,
 
     def __init__(self,
                  args=None,
+                 quiet=False,
                  **kwargs):
         description="""\
 Runs an OpenFoam solver.  Needs the usual 3 arguments (<solver>
@@ -133,6 +134,7 @@ variables
                                                    singleFile=self.opts.singleDataFilesOnly,
                                                    doTimelines=True),
                                silent=self.opts.progress or self.opts.silent,
+                               splitThres=self.opts.splitDataPointsThreshold if self.opts.doSplitDataPoints else None,
                                argv=self.replaceAutoInArgs(args),
                                server=self.opts.server,
                                lam=lam,
@@ -147,6 +149,7 @@ variables
                                jobId=self.opts.jobId)
 
             run.createPlots(customRegexp=self.lines_,
+                            splitThres=self.opts.splitDataPointsThreshold if self.opts.doSplitDataPoints else None,
                             writeFiles=self.opts.writeFiles)
 
             if self.cursesWindow:

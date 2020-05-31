@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: GnuplotTimelines.py,v 3f8df529776e 2020-02-28 20:07:20Z bgschaid $
 """Plots a collection of timelines"""
 
 from PyFoam.ThirdParty.Gnuplot import Gnuplot,Data,gp
@@ -28,6 +28,7 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
                  custom,
                  terminal="x11",
                  showWindow=True,
+                 quiet=False,
                  registry=None):
         """:param timelines: The timelines object
         :type timelines: TimeLineCollection
@@ -39,7 +40,7 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
         """
 
         GeneralPlotTimelines.__init__(self,timelines,custom,showWindow=showWindow,registry=registry)
-        Gnuplot.__init__(self,persist=self.spec.persist)
+        Gnuplot.__init__(self, persist=self.spec.persist, quiet=quiet)
 
         self.itemlist=[]
         self.terminal=terminal
@@ -153,6 +154,27 @@ class GnuplotTimelines(GeneralPlotTimelines,Gnuplot):
         # print("Replot")
         self.replot()
         # print("Replot out")
+
+    def rgb2spec(self,rgb):
+        return "#"+"".join(["{:02X}".format(min(255,max(0,int(255*c)))) for c in rgb])
+
+    def addVerticalMarker(self,colorRGB=None,label=None):
+        """Add a vertical line to the graph at the current time"""
+
+        try:
+            tm=self.data.getTimes()[-1]
+        except IndexError:
+            return
+
+        if colorRGB:
+            colorstring=' linecolor "%s"' % self.rgb2spec(colorRGB)
+        else:
+            colorstring=""
+
+        self.set_string(("arrow from %f,graph 0 to %f,graph 1 nohead" % (tm,tm))+colorstring)
+
+        if label:
+            self.set_string('label "%s" at %f,graph 0.5 center rotate' % (label,tm))
 
     def actualSetTitle(self,title):
         """Sets the title"""

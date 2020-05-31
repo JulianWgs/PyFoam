@@ -80,10 +80,10 @@ def potentialCylinderTutorial():
         prefix=path.join(prefix,"basic","potentialFoam")
     return path.join(prefix,"cylinder")
 
-def planarPoiseuilleTutorial():
+def planarContractionTutorial():
     prefix=foamTutorials()
 
-    return path.join(prefix,"incompressible","pimpleFoam","laminar","planarPoiseuille")
+    return path.join(prefix,"incompressible","pimpleFoam","laminar","planarContraction")
 
 def backwardFacingStep2DTutorial():
     prefix=foamTutorials()
@@ -759,7 +759,7 @@ class ParsedParameterFileIncludeTest(unittest.TestCase):
 
 class ParsedParameterFileIncludeFuncTest(unittest.TestCase):
     def setUp(self):
-        self.fileName=path.join(planarPoiseuilleTutorial(),"system","controlDict")
+        self.fileName=path.join(planarContractionTutorial(),"system","controlDict")
 
     def tearDown(self):
         pass
@@ -767,8 +767,8 @@ class ParsedParameterFileIncludeFuncTest(unittest.TestCase):
     @pytest.mark.skipif(foamTutorials()=='',reason="$FOAM_TUTORIALS is not defined")
     def testBasicIncludeFunc(self):
         test=ParsedParameterFile(self.fileName,doMacroExpansion=True)
-        self.assertEqual(test["functions"]["probes"]["fields"],["U"])
-        self.assertEqual(test["functions"]["probes"]["writeControl"],"timeStep")
+        self.assertEqual(test["functions"]["graphs"]["fields"],["U"])
+        self.assertEqual(test["functions"]["graphs"]["writeControl"],"writeTime")
 
 class ParsedParameterFileIncludeFuncQuotedTest(unittest.TestCase):
     def setUp(self):

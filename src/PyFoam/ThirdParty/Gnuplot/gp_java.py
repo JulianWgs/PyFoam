@@ -1,4 +1,4 @@
-# $Id: gp_java.py 291 2006-03-03 08:58:48Z mhagger $
+# $Id$
 
 # Copyright (C) 2002-2003 Michael Haggerty <mhagger@alum.mit.edu>
 #
@@ -99,7 +99,7 @@ class GnuplotProcess:
 
     """
 
-    def __init__(self, persist=None):
+    def __init__(self, persist=None, quiet=False):
         """Start a gnuplot process.
 
         Create a 'GnuplotProcess' object.  This starts a gnuplot

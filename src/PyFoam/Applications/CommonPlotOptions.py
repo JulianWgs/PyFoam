@@ -32,6 +32,11 @@ class CommonPlotOptions(object):
                                action="store_false",
                                dest="persist",
                                help="Gnuplot windows close after interrupt")
+        behaveGroup.add_option("--quiet-plot",
+                               action="store_true",
+                               dest="quietPlot",
+                               default=False,
+                               help="The plot implementation should not print to the standard output (some implementations do this)")
         behaveGroup.add_option("--raise",
                                action="store_true",
                                dest="raiseit",

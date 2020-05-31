@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: TemplateFile.py,v de6dbd122d11 2020-02-25 11:02:08Z bgschaid $
 
 import re
 from math import *
@@ -224,7 +224,15 @@ class TemplateFileOldFormat(object):
 
         if gzip:
             import gzip as gz
+            if PY3:
+                output = output.encode()
             gz.open(outfile, "wb").write(output)
+            unzipped=path.splitext(outfile)[0]
+            if path.exists(unzipped):
+                 warning("Removing",unzipped,"because it might shadow generated",
+                         outfile)
+                 from os import unlink
+                 unlink(unzipped)
         else:
             open(outfile, "w").write(output)
 

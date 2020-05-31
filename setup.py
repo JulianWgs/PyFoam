@@ -1,16 +1,16 @@
 from setuptools import setup
-from setuptools import find_packages
 
-import glob,os,sys
+import glob, os, sys
 # To use a consistent encoding
 from codecs import open
 from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-scriptlist =glob.glob(os.path.join('bin', '*.py'))
-scriptlist+=glob.glob(os.path.join('sbin', '*.py'))
+scriptlist = glob.glob(os.path.join('bin', '*.py'))
+scriptlist += glob.glob(os.path.join('sbin', '*.py'))
 
+sys.path.insert(0, "src")
 from PyFoam import versionString
 
 # with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
@@ -63,6 +63,9 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     keywords='cfd openfoam',
     install_requires=['numpy'],

@@ -18,6 +18,7 @@ class ConvergenceRunner(AnalyzedRunner):
     def __init__(self,analyzer,
                  argv=None,
                  silent=False,
+                 splitThres=2048,
                  logname="PyFoamSolve",
                  server=False,
                  lam=None,
@@ -35,6 +36,7 @@ class ConvergenceRunner(AnalyzedRunner):
                                 argv,
                                 silent,
                                 logname,
+                                splitThres=splitThres,
                                 server=server,
                                 lam=lam,
                                 compressLog=compressLog,
@@ -46,7 +48,7 @@ class ConvergenceRunner(AnalyzedRunner):
                                 echoCommandLine=echoCommandLine,
                                 jobId=jobId)
 
-        self.analyzer.addAnalyzer("Convergence",SteadyConvergedLineAnalyzer())
+        self.analyzer.addAnalyzer("Convergence", SteadyConvergedLineAnalyzer())
 
     def lineHandle(self,line):
         """Not to be called: Stops the solver"""

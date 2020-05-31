@@ -19,6 +19,66 @@
 
     This can be switched on via the command line or the
     =LocalConfigPyFoam= file
+*** =customRegexp= has a type =mark= to add marks to the plots
+    Plots of =type mark= don't plot but there is a list =targets= with
+    names of other plots. Every time the =expr= matches a vertical
+    line is added to those plots.
+
+    Purpose of this type is to annotate singular events in the graphs
+*** Plotting utilities now plot progress of =snappyHexMesh=
+    The =pyFoamPlotRunner.py= and =pyFoamPlotWatcher.py= now allow
+    plotting the numbers of cells in different refinement levels in
+    =snappyHexMesh=
+
+    Different phases are annotated with vertical lines
+*** Plotting utilities now plot progress of =foamyHexMesh=
+    The =pyFoamPlotRunner.py= and =pyFoamPlotWatcher.py= now allow
+    plotting the numbers of inserted points and the total displacement
+    and distance of =foamyHexMesh=
+*** Plotting utilities now print available values of =type=
+    Instead of an obscure error message it now prints a list of the
+    available types and a short descriptions
+*** Missing attributes in =customRegexp=-specifications now give better error messages
+    Now the complete spec is printed (in addition to the missing attribute)
+*** Option =--quiet-plot= for plotting utilities swallows output of the plotting program
+    =gnuplot= sometimes outputs error messages which mess up the
+    =ncurses=-output. The =--quiet-plot=-option swallows this
+    output. This behaviour is *not* the default because sometimes this
+    output is useful
+*** Colored markers in =pyFoamPlotWatcher= for logfiles from restarts
+    If following a file which has =.restartXX=-files then when the
+    file is changed a red marker line with the label "Restart" is
+    shown in all the plots
+*** =writeFiles= in a =customRegexp=-entry writes scanned output to file
+    If a line
+: writeFiles yes;
+    is added to an entry in =customRegexp= then the data is written to
+    a file as well. These files are found in the =.analyzed=-folder
+*** Modifying splitting behavior for plot data
+    Plotting data is reduced from time to time if the number of data
+    points exceeds a certain threshold. Usually this threshold
+    is 2048. Now for most runner utilities (and the =PlotWatcher=)
+    there are two additional options: =--split-data-points-threshold=
+    allows setting the number of data points to a different value than
+    2048 and =--no-split-data-points=  to switch off splitting altogether
+*** Parametric plots with =xvalue= in =customRegexp=
+    If an entry =xvalue= is found in a =customRegexp=-specification
+    then the value with that name is *not* plotted but used instead of
+    the time as the $x$-coordinate for the plot. So something like
+#+begin_src c++
+highspeedLocation {
+    theTitle "Location of the highest velocity";
+    expr "Expression highSpeedLoc :  min=\((.+) (.+) .+\)";
+    titles (
+        x
+        y
+    );
+    xlabel "x";
+    ylabel "y";
+    xvalue x;
+}
+#+end_src
+    plots the location of the highest speed
 ** Enhancements to the library
 *** Paraview-classes now work with Python 3
     See above: /Paraview-utilities now work in Paraviews that use
@@ -29,16 +89,82 @@
     extension =.gz= added. If the file already has the extension =.gz=
     it is assumed that =gzip= is set. If a file of the same name with
     an extension =.gz= exists then it is assumed that this is to be
-    overwritten
+    overwritten. If a file is written zipped and the same file without
+    =.gz= exists then it is removed to avoid confusion which file will
+    be used
+*** Mechanism to have =alternateTime= in single =customRegexp=
+    The entry =alternateTime= now allows to reference special
+    expressions that will serve as an alternate "time source". This
+    was for instance used to implement the progress graph for
+    =snappyHexMesh=
+*** =quiet=-option added to plotting implementations
+    This option tells the plotting program to not output anything to
+    the terminal. Currently only works for =Gnuplot=
+*** The =[]=-operator of the =PyFoamDataFrame= is now more flexible
+    If that operator gets a single numeric value or a list of numbers
+    it gets the rows where the index (usually the time) is nearest to
+    the number(s) and returns a =PyFoamDataFrame=
+
+    All other keys are passed to the "usual" =[]=-operator of the
+    =DataFrame= but the result is converted to a =PyFoamDataFrame=
+*** Each run started by =BasicRunner= has a unique ID
+    Each run gets a unique id. This allows to easily find out whether
+    the data is from the same run
+*** =pyFoamAddCaseDataToDatabase.py= allows updating data
+    The =--update= switch allows updating the data for runs. Otherwise
+    if the run already exists in the database the utility will fail
+*** =RunDatabase= gets method =modify=
+    This method allows updating a run with a unique id by specifying a
+    (nested) dictionary with the values
 ** Bug fixes
+*** =auto= for the solver does not work with compressed =controlDict=
+    If the =controlDict= was compressed the value of the
+    =application=-entry could not be read. This has been fixed
+*** =FileBasisBackup= now works with zipped file
+    If a file is already zipped then the =FileBasisBackup= class could
+    not create a backup file and failed. This works now
+*** Case with zipped =controlDict= not recognized as a valid case
+    If the =controlDict= was zipped for some reason then PyFoam (and
+    therefor utilities like =pyFoamListCase.py=) did not recognize it
+    as a valid case
+*** =pyFoamDisplayBlockMesh.py= not working with newer VTK-versions
+    The utility did not work with newer versions of VTK. This has been
+    fixed. In the process support for Python 2.x has been broken
 ** Incompatibilities
 *** =TemplateFile= writes to zipped file if it exists
     The method =writeFile= looks for a file o the same name with =.gz=
     added. If this exists then it is assumed that this should be
     written (in zipped form)
+*** =pyFoamDisplayBlockMesh.py= not working with Python 2.x anymore
+    This utility now requires Python 3.
+
+    It is not typically run on computation servers (which mostly still
+    have Python 2) so the extra effort to support this outdated
+    version of Python is not worth it
+*** Constructor of =PyFoamDataFrame= is more restrictive
+    The constructor now checks if
+    - the index has a number type
+    - the index is strictly monothonic
+    because most additional algorithms (=integrate()= etc) rely on
+    these assumptions
+*** =[]=-operator of =PyFoamDataFrame= returns a =PyFoamDataFrame=
+    The old behaviour of this was to return a =DataFrame=. Shouldn't
+    break existing code but makes it easier to chain indexes
+*** =RunDatabase= fails if the same unique ID is inserted again
+    If a dataset with the same unique ID is added with =add= for a
+    second time the method fails with a =KeyError= unless the
+    =update_existing=-flag is set
+
+    This has the potential to beak old code (which probably wouldn't
+    work correctly anyway as the old behaviour was to add the data for
+    the rum for a second time)
 ** Code structure
 ** Infrastructure
 ** ThirdParty
+*** Modification to =Gnuplot=-library
+    There has been a =quiet=-option added that swallows all terminal
+    output of =gnuplot=. This only works in the
+    Unix/Linux-implementation. All others ignore it
 * Version 0.6.11 - 2019-10-31
 ** Code structure
 *** Moved library into =src=-directory

@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: CustomPlotInfo.py,v 52a98a5ace0c 2020-01-31 21:09:38Z bgschaid $
 """Information about custom plots"""
 
 from PyFoam.Basics.TimeLineCollection import TimeLineCollection
@@ -65,10 +65,12 @@ class CustomPlotInfo(object):
         #        self.with_="points"
         self.type="regular";
         self.master=None
+        self.alternateTime=None
         self.progress=None
         self.enabled=enabled
         self.xlabel="Time [s]"
         self.ylabel=None
+        self.xvalue=None
         self.gnuplotCommands=[]
         self.enhanced=False
         self.stringValues=None
@@ -83,6 +85,7 @@ class CustomPlotInfo(object):
         self.skip_header=0
         self.stripCharacters=None
         self.replaceFirstLine=None
+        self.writeFiles=False
 
         # Legacy format
         if raw==None:
@@ -138,11 +141,14 @@ class CustomPlotInfo(object):
     def __str__(self):
         return makeString({self.id:self.getDict(wrapStrings=True)})
 
+    def __is_attribute(self,d):
+        return isinstance(getattr(self,d),(str,bool,int,list,dict,float)) and d.find("__")<0
+
     def getDict(self,wrapStrings=False):
         result={}
 
         for d in dir(self):
-            if (type(getattr(self,d))  in [str,bool,int,list,dict,float]) and d.find("__")<0:
+            if self.__is_attribute(d):
                 if d=="id" or d=="nr":
                     pass
                 else:
@@ -157,6 +163,11 @@ class CustomPlotInfo(object):
                 result[key]=val
         return result
 
+    def __getattr__(self,name):
+        if name.find("__")==0:
+            return
+
+        raise AttributeError("'{}' not in custom plot spec:\n{}".format(name,self))
 
 def readCustomPlotInfo(rawData,useName=None):
     """Determines which of the three possible formats for custom-plotting is used

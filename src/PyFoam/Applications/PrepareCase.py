@@ -679,7 +679,10 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
                                   parallel=True,
                                   paraviewLink=self.opts.paraviewFile)
 
+        previousDirectory = None
         if self.opts.executeInCaseDirectory:
+            previousDirectory = path.abspath(path.curdir)
+
             from os import chdir
             if path.realpath(cName)==path.realpath(path.curdir):
                 self.warning("Not changing directory because Already in",path.realpath(path.curdir))
@@ -694,6 +697,10 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
             if self.__lastMessage:
                 self.__writeToStateFile(sol,self.__lastMessage+" failed")
             raise
+
+        if previousDirectory:
+            # Change back if this is used in a script
+            chdir(previousDirectory)
 
     def __strip(self,val):
         """Strip extra " from strings"""
