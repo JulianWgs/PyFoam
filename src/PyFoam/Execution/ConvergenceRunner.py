@@ -35,8 +35,8 @@ class ConvergenceRunner(AnalyzedRunner):
                                 analyzer,
                                 argv,
                                 silent,
-                                splitThres=splitThres,
                                 logname,
+                                splitThres=splitThres,
                                 server=server,
                                 lam=lam,
                                 compressLog=compressLog,
@@ -48,7 +48,7 @@ class ConvergenceRunner(AnalyzedRunner):
                                 echoCommandLine=echoCommandLine,
                                 jobId=jobId)
 
-        self.analyzer.addAnalyzer("Convergence",SteadyConvergedLineAnalyzer())
+        self.analyzer.addAnalyzer("Convergence", SteadyConvergedLineAnalyzer())
 
     def lineHandle(self,line):
         """Not to be called: Stops the solver"""
