@@ -1,5 +1,7 @@
 # -*- mode: org -*-
-* Version 0.6.12 - Not releases
+* Version 2020.05 - 2020-05-31
+  This is the first version of /PyFoam/ where the version numbers
+  change from pseudo-semantic versioning to date-based versions
 ** New features/utilities
 ** Enhancements to the utilities
 *** Paraview-utilities now work in Paraviews that use Python 3
