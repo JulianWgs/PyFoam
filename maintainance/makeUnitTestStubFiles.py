@@ -12,7 +12,7 @@ fCreated=0
 def checkForTests(lib,test):
     global dMissing,fCreated
 
-    libDir=path.join(*lib)
+    libDir=path.join("src",path.join(*lib))
     testDir=path.join(*test)
     print_("Comparing",libDir,"to",testDir)
     for f in listdir(libDir):

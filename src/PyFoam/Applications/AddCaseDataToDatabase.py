@@ -52,6 +52,11 @@ Adds the content of a number of pickledData-files to a sqlite database
                        dest="skipMissing",
                        default=False,
                        help="Skip files that are missing or unreadable")
+        how.add_option("--update",
+                       action="store_true",
+                       dest="update",
+                       default=False,
+                       help="Update the data if a run with the same unique id already exists in the database")
 
 
     def run(self):
@@ -77,4 +82,8 @@ Adds the content of a number of pickledData-files to a sqlite database
                 else:
                     self.error("There was a problem reading file",s,
                                ":",e)
-            db.add(data)
+            try:
+                db.add(data,
+                       update_existing=self.opts.update)
+            except KeyError as e:
+                print("Data from file {} already in database: {}".format(s, e))

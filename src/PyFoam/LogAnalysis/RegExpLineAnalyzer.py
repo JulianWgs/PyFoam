@@ -2,13 +2,14 @@
 """Analyzes lines with regular expressions"""
 
 import re
+import sys
 
 # for the eval
 from math import *
 
 from .GeneralLineAnalyzer import GeneralLineAnalyzer
 from PyFoam.Error import warning
-from PyFoam.ThirdParty.six import integer_types
+from PyFoam.ThirdParty.six import integer_types,print_
 
 class RegExpLineAnalyzer(GeneralLineAnalyzer):
     """Parses lines for an arbitrary regular expression
@@ -92,7 +93,13 @@ class RegExpLineAnalyzer(GeneralLineAnalyzer):
             self.linesToMatch=deque([],maxlen=1+self.strExp.count(r'\n'))
             reFlags=re.MULTILINE
 
-        self.exp=re.compile(self.strExp,reFlags)
+        try:
+            self.exp=re.compile(self.strExp,reFlags)
+        except:
+            e = sys.exc_info()[1] # Needed because python 2.5 does not support 'as e'
+            e.args=e.args+("While compiling regular expression '{}'".format(self.strExp),)
+            raise e
+
         self.registerRegexp(self.exp)
 
         self.data={}

@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: PlotWatcher.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 """
 Class that implements pyFoamPlotWatcher
 """
@@ -163,6 +163,8 @@ the extension '.logfile' in the directory and uses that
         run=GnuplotWatcher(logFile,
                            smallestFreq=self.opts.frequency,
                            persist=self.opts.persist,
+                           quiet=self.opts.quietPlot,
+                           splitThres=self.opts.splitDataPointsThreshold if self.opts.doSplitDataPoints else None,
                            tailLength=self.opts.tail,
                            silent=self.opts.silent or (self.opts.longProgress and self.cursesWindow),
                            hardcopy=self.opts.hardcopy,

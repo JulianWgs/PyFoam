@@ -20,6 +20,7 @@ class MatplotlibTimelines(GeneralPlotTimelines):
                  timelines,
                  custom,
                  showWindow=True,
+                 quiet=False,
                  registry=None):
         """:param timelines: The timelines object
         :type timelines: TimeLineCollection

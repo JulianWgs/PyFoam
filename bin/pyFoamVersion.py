@@ -29,14 +29,10 @@ print_()
 print_("Python executable:",sys.executable)
 print_()
 
-if sys.version_info<(2,3):
-    print_("\nUnsupported Python-version (at least 2.3). Recommended is 2.6 or 2.7")
-elif sys.version_info<(2,4):
-    print_("\nThis Python version does not support all features needed by PyFoam (get at least 2.4. Recommended is 2.6 or 2.7")
-elif sys.version_info<(2,6):
+if sys.version_info<(2,7):
     print_("This version may not work anymore due to the port of PyFoam to Python 3")
 elif sys.version_info<(3,):
-    print_("Python 2.7 is one development platform for PyFoam (along with Python 3)")
+    print_("Python 2.7 is the last 2.x-version of Python supported for PyFoam. But Python 3 is recommended")
 elif sys.version_info>=(3,):
     print_("Python 3 is supported with PyFoam")
 
@@ -81,8 +77,8 @@ if PyFoam.FoamInformation.oldAppConvention():
 print_()
 print_("pyFoam-Version:",PyFoam.versionString())
 
-# hardcodedVersion=(0,6,12,"development") # Change in PyFoam/__init__.py as well
-hardcodedVersion=(0,6,11)
+# hardcodedVersion=(2020, 5, "development") # Change in PyFoam/__init__.py as well
+hardcodedVersion=(2020, 5)
 
 if PyFoam.version()!=hardcodedVersion:
     print_("ALERT: Reported version",PyFoam.version(),

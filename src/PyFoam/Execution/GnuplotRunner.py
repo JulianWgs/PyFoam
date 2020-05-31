@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: GnuplotRunner.py,v 2d3659384189 2020-02-27 10:48:04Z bgschaid $
 """Runner that outputs the residuals of the linear solver with Gnuplot"""
 
 from .StepAnalyzedCommon import StepAnalyzedCommon
@@ -19,6 +19,7 @@ class GnuplotCommon(StepAnalyzedCommon):
                  fname,
                  smallestFreq=0.,
                  persist=None,
+                 quiet=False,
                  splitThres=2048,
                  plotLinear=True,
                  plotCont=True,
@@ -63,6 +64,7 @@ class GnuplotCommon(StepAnalyzedCommon):
 
         self.plots={}
         self.createPlots(persist=persist,
+                         quiet=quiet,
                          raiseit=raiseit,
                          start=start,
                          end=end,
@@ -137,6 +139,8 @@ class GnuplotRunner(GnuplotCommon,BasicRunner):
                  argv=None,
                  smallestFreq=0.,
                  persist=None,
+                 quiet=False,
+                 splitThres=2048,
                  plotLinear=True,
                  plotCont=True,
                  plotBound=True,
@@ -191,6 +195,8 @@ class GnuplotRunner(GnuplotCommon,BasicRunner):
                                "Gnuplotting",
                                smallestFreq=smallestFreq,
                                persist=persist,
+                               quiet=quiet,
+                               splitThres=splitThres,
                                plotLinear=plotLinear,
                                plotCont=plotCont,
                                plotBound=plotBound,
@@ -234,6 +240,8 @@ class GnuplotWatcher(GnuplotCommon,BasicWatcher):
                  logfile,
                  smallestFreq=0.,
                  persist=None,
+                 quiet=False,
+                 splitThres=2048,
                  silent=False,
                  tailLength=1000,
                  sleep=0.1,
@@ -274,6 +282,8 @@ class GnuplotWatcher(GnuplotCommon,BasicWatcher):
                                logfile,
                                smallestFreq=smallestFreq,
                                persist=persist,
+                               quiet=quiet,
+                               splitThres=splitThres,
                                plotLinear=plotLinear,
                                plotCont=plotCont,
                                plotBound=plotBound,

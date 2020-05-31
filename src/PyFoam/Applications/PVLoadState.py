@@ -5,7 +5,7 @@ Class that implements pyFoamPVLoadState
 
 from optparse import OptionGroup
 
-from PyFoamApplication import PyFoamApplication
+from .PyFoamApplication import PyFoamApplication
 
 from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
 from PyFoam.Paraview.ServermanagerWrapper import ServermanagerWrapper as SM

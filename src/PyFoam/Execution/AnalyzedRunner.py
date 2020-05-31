@@ -13,6 +13,7 @@ class AnalyzedRunner(StepAnalyzedCommon,BasicRunner):
                  argv=None,
                  silent=False,
                  logname="PyFoamSolve",
+                 splitThres=2048,
                  server=False,
                  lam=None,
                  compressLog=False,
@@ -40,6 +41,7 @@ class AnalyzedRunner(StepAnalyzedCommon,BasicRunner):
         StepAnalyzedCommon.__init__(self,
                                     logname,
                                     analyzer,
+                                    splitThres=splitThres,
                                     smallestFreq=smallestFreq)
 
         self.writeToStateFile("LogDir",self.logDir)

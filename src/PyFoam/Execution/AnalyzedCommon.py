@@ -1,4 +1,4 @@
-#  ICE Revision: $Id$
+#  ICE Revision: $Id: AnalyzedCommon.py,v 3f8df529776e 2020-02-28 20:07:20Z bgschaid $
 """Common stuff for classes that use analyzers"""
 
 from os import path,mkdir
@@ -8,6 +8,8 @@ from PyFoam.Basics.PlotTimelinesFactory import createPlotTimelines,createPlotTim
 from PyFoam.Basics.TimeLineCollection import signedMax
 from PyFoam.LogAnalysis.RegExpLineAnalyzer import RegExpLineAnalyzer
 from PyFoam.LogAnalysis.PhaseChangerLineAnalyzer import PhaseChangerLineAnalyzer
+from PyFoam.LogAnalysis.CountLineAnalyzer import CountLineAnalyzer
+from PyFoam.LogAnalysis.TriggerLineAnalyzer import TriggerLineAnalyzer
 from PyFoam.LogAnalysis.ExecNameLineAnalyzer import ExecNameLineAnalyzer
 from PyFoam.LogAnalysis.ReplayDataFileAnalyzer import ReplayDataFileAnalyzer
 
@@ -29,6 +31,7 @@ class AnalyzedCommon(object):
     def __init__(self,
                  filenames,
                  analyzer,
+                 splitThres=2048,
                  doPickling=True):
         """:param filename: name of the file that is being analyzed
         :param analyzer: the analyzer itself
@@ -40,6 +43,7 @@ class AnalyzedCommon(object):
             filename=filenames
 
         self.analyzer=analyzer
+        self.analyzer.addResetFileTrigger(self.resetFile)
 
         if 'dir' in dir(self):
             self.logDir=path.join(self.dir,filename+".analyzed")
@@ -67,7 +71,7 @@ class AnalyzedCommon(object):
         self.end=None
         self.raiseit=False
         self.writeFiles=False
-        self.splitThres=2048
+        self.splitThres=splitThres
         self.plottingImplementation="dummy"
         self.gnuplotTerminal=None
 
@@ -75,6 +79,14 @@ class AnalyzedCommon(object):
         eName.addListener(self.execNameFound)
         self.addAnalyzer("ExecName",eName)
         self.automaticCustom=None
+
+        self.tickers=[]
+        self.plots={}
+
+    def addTicker(self,ticker):
+        """Add a callable that will be called at every timestep"""
+        if ticker is not None:
+            self.tickers.append(ticker)
 
     def addPlots(self,plots):
         "Add plots. To be overriden"
@@ -175,6 +187,7 @@ class AnalyzedCommon(object):
 
                 automaticPlots=self.addCustomExpressions(self.automaticCustom,
                                                          persist=self.persist,
+                                                         quiet=self.quiet,
                                                          start=self.start_,
                                                          end=self.end,
                                                          raiseit=self.raiseit,
@@ -182,7 +195,6 @@ class AnalyzedCommon(object):
                                                          splitThres=self.splitThres,
                                                          gnuplotTerminal=self.gnuplotTerminal,
                                                          plottingImplementation=self.plottingImplementation)
-                # plots.update(customPlots)
                 self.reset()
                 self.addPlots(automaticPlots)
 
@@ -212,6 +224,7 @@ class AnalyzedCommon(object):
 
     def createPlots(self,
                     persist=None,
+                    quiet=False,
                     raiseit=False,
                     splitThres=2048,
                     plotLinear=True,
@@ -231,6 +244,7 @@ class AnalyzedCommon(object):
         plots={}
 
         self.persist=persist
+        self.quiet=quiet
         self.start_=start
         self.end=end
         self.raiseit=raiseit
@@ -243,6 +257,7 @@ class AnalyzedCommon(object):
             plots["linear"]=createPlotTimelinesDirect("linear",
                                                       self.getAnalyzer("Linear").lines,
                                                       persist=persist,
+                                                      quiet=quiet,
                                                       raiseit=raiseit,
                                                       forbidden=["final","iterations"],
                                                       start=start,
@@ -261,6 +276,7 @@ class AnalyzedCommon(object):
             plots["cont"]=createPlotTimelinesDirect("continuity",
                                                     self.getAnalyzer("Continuity").lines,
                                                     persist=persist,
+                                                    quiet=quiet,
                                                     alternateAxis=["Global"],
                                                     raiseit=raiseit,
                                                     start=start,
@@ -278,6 +294,7 @@ class AnalyzedCommon(object):
             plots["bound"]=createPlotTimelinesDirect("bounding",
                                                      self.getAnalyzer("Bounding").lines,
                                                      persist=persist,
+                                                     quiet=quiet,
                                                      raiseit=raiseit,
                                                      start=start,
                                                      end=end,
@@ -292,6 +309,7 @@ class AnalyzedCommon(object):
             plots["iter"]=createPlotTimelinesDirect("iterations",
                                                     self.getAnalyzer("Iterations").lines,
                                                     persist=persist,
+                                                    quiet=quiet,
                                                     with_="steps",
                                                     raiseit=raiseit,
                                                     start=start,
@@ -308,6 +326,7 @@ class AnalyzedCommon(object):
             plots["courant"]=createPlotTimelinesDirect("courant",
                                                        self.getAnalyzer("Courant").lines,
                                                        persist=persist,
+                                                       quiet=quiet,
                                                        raiseit=raiseit,
                                                        start=start,
                                                        end=end,
@@ -323,6 +342,7 @@ class AnalyzedCommon(object):
             plots["deltaT"]=createPlotTimelinesDirect("timestep",
                                                       self.getAnalyzer("DeltaT").lines,
                                                       persist=persist,
+                                                      quiet=quiet,
                                                       raiseit=raiseit,
                                                       start=start,
                                                       end=end,
@@ -339,6 +359,7 @@ class AnalyzedCommon(object):
             plots["execution"]=createPlotTimelinesDirect("execution",
                                                          self.getAnalyzer("Execution").lines,
                                                          persist=persist,
+                                                         quiet=quiet,
                                                          with_="steps",
                                                          raiseit=raiseit,
                                                          start=start,
@@ -351,9 +372,12 @@ class AnalyzedCommon(object):
             plots["execution"].setTitle("Execution Time")
             plots["execution"].setYLabel("Time [s]")
 
+        self.plots.update(plots)
+
         if customRegexp:
             customPlots=self.addCustomExpressions(customRegexp,
                                                   persist=persist,
+                                                  quiet=quiet,
                                                   start=start,
                                                   end=end,
                                                   raiseit=raiseit,
@@ -366,8 +390,10 @@ class AnalyzedCommon(object):
 
         self.addPlots(plots)
 
-    def addCustomExpressions(self,customRegexp,
+    def addCustomExpressions(self,
+                             customRegexp,
                              persist=None,
+                             quiet=False,
                              start=None,
                              end=None,
                              raiseit=False,
@@ -378,6 +404,21 @@ class AnalyzedCommon(object):
         plots={}
         masters={}
         slaves=[]
+        canonical={}
+        marks=[]
+
+        plotTypes= [
+            ("regular"    , "Matches regular expression and plots"),
+            ("slave"      , "Plot data on a different plot (the 'master')"),
+            ("dynamic"    , "Dynamically creates lines depending on the match found at 'idNr'"),
+            ("dynamicslave" , "Combination of 'dynamic' and 'slave'"),
+            ("data"       , "Reads data from a file and plots it"),
+            ("dataslave"  , "Combination of 'data' and 'slave'"),
+            ("count"      , "Counts how often an expression occured (no plotting but used for 'alternateTime')"),
+            ("mark"       , "If the expression matches then a vertical marker is drawn on the 'targets'"),
+            ("phase"      , "Changes the phase prefix (for multi-region cases)")
+        ]
+
         for i,custom in enumerate(customRegexp):
             if not custom.enabled:
                 continue
@@ -390,11 +431,26 @@ class AnalyzedCommon(object):
                 custom.end=end
             custom.raiseit=raiseit
 
+            if custom.type not in [p[0] for p in plotTypes]:
+                error("type '{}' of custom plot '{}' not in known types:\n   {}".format(
+                    custom.type,custom.id,
+                    "\n   ".join(["{:15} : {}".format(n,d) for n,d in plotTypes])))
+
             createPlot=True
             if custom.type=="phase":
                 self.addAnalyzer(custom.name,
                                  PhaseChangerLineAnalyzer(custom.expr,
                                                           idNr=custom.idNr))
+                createPlot=False
+            elif custom.type=="count":
+                self.addAnalyzer(custom.name,
+                                 CountLineAnalyzer(custom.expr))
+                createPlot=False
+            elif custom.type=="mark":
+                a=TriggerLineAnalyzer(custom.expr)
+                self.addAnalyzer(custom.name,
+                                 a)
+                marks.append((custom,a))
                 createPlot=False
             elif custom.type in ["dynamic","dynamicslave"]:
                 self.addAnalyzer(custom.name,
@@ -402,7 +458,7 @@ class AnalyzedCommon(object):
                                                     custom.expr,
                                                     titles=custom.titles,
                                                     doTimelines=True,
-                                                    doFiles=writeFiles,
+                                                    doFiles=writeFiles or custom.writeFiles,
                                                     accumulation=custom.accumulation,
                                                     dataTransformations=custom.dataTransformations,
                                                     progressTemplate=custom.progress,
@@ -418,7 +474,7 @@ class AnalyzedCommon(object):
                                                     custom.expr,
                                                     titles=custom.titles,
                                                     doTimelines=True,
-                                                    doFiles=writeFiles,
+                                                    doFiles=writeFiles or custom.writeFiles,
                                                     accumulation=custom.accumulation,
                                                     dataTransformations=custom.dataTransformations,
                                                     progressTemplate=custom.progress,
@@ -444,12 +500,15 @@ class AnalyzedCommon(object):
             else:
                 error("Unknown type",custom.type,"in custom expression",custom.name)
 
+            canonical[custom.id]=custom.name
+
             if createPlot:
                 if custom.master==None:
                     if custom.type in ["slave","dynamicslave","dataslave"]:
                         error("Custom expression",custom.name,"is supposed to be a 'slave' but no master is defined")
                     masters[custom.id]=custom
                     plotCustom=createPlotTimelines(self.getAnalyzer(custom.name).lines,
+                                                   quiet=quiet,
                                                    custom=custom,
                                                    gnuplotTerminal=gnuplotTerminal,
                                                    implementation=plottingImplementation)
@@ -457,6 +516,7 @@ class AnalyzedCommon(object):
                                                                  advancedSplit=True)
                     plotCustom.setTitle(custom.theTitle)
                     plots["custom%04d" % i]=plotCustom
+                    self.plots[custom.id]=plotCustom
                 else:
                     if custom.type not in ["slave","dynamicslave","dataslave"]:
                         error("'master' only makes sense if type is 'slave' or 'dynamicslave' for",custom.name)
@@ -464,6 +524,13 @@ class AnalyzedCommon(object):
                         error("Specify alternate values in 'alternateAxis' of master",
                               custom.master,"for",custom.name)
                     slaves.append(custom)
+
+        for custom in customRegexp:
+            if custom.alternateTime:
+                self.getAnalyzer(custom.name).setParent(
+                    self.getAnalyzer(canonical[custom.alternateTime])
+                )
+                self.getAnalyzer(canonical[custom.alternateTime]).addTimeListener(self.getAnalyzer(custom.name))
 
         for s in slaves:
             if s.master not in masters:
@@ -474,6 +541,20 @@ class AnalyzedCommon(object):
                 slave=self.getAnalyzer(s.name)
                 master=self.getAnalyzer(masters[s.master].name)
                 slave.setMaster(master)
+
+        for custom,analyzer in marks:
+            for pName in custom.targets:
+                try:
+                    p=self.plots[pName]
+                except KeyError as e:
+                    print_("Available plots:",list(self.plots.keys()))
+                    raise e
+
+                def mark(p):
+                    def makeMark():
+                        p.addVerticalMarker()
+                    return makeMark
+                analyzer.addFunction(mark(p))
 
         return plots
 
@@ -514,5 +595,11 @@ class AnalyzedCommon(object):
     def setDataSet(self,data):
         if hasattr(self,"data"):
             self.data["analyzed"]=data
+
+    def resetFile(self):
+        """The input file changed and we add a marker to all plots"""
+        for n in self.plots:
+            p = self.plots[n]
+            p.addVerticalMarker(colorRGB=(1.,0,0),label="Restart")
 
 # Should work with Python3 and Python2

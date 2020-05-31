@@ -281,6 +281,27 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
                         default=False,
                         help="Build an example case that can be executed without pyFoam. Only evaluates the templates, builds a AllRun-script and removes unnecessary files. Does not work for all configurations")
 
+        if configuration().getboolean("PrepareCase","ZipExtensionlessTemplateResults"):
+            mode.add_option("--no-zip-extensionless-template-results",
+                            action="store_false",
+                            dest="zipExtensionlessTemplateResults",
+                            default=True,
+                            help="Do not automatically zip extensionless template results")
+        else:
+            mode.add_option("--zip-extensionless-template-results",
+                            action="store_true",
+                            dest="zipExtensionlessTemplateResults",
+                            default=False,
+                            help="Zip the results of template evaluations. So a template file foo.template gets written to a zipped file foo.gz. This is only done if foo has no extension")
+
+        defaultZipableExtensions=configuration().getList("PrepareCase","ZipableExtensions")
+
+        mode.add_option("--zipable-extensions",
+                        action="append",
+                        dest="zipableExtensions",
+                        default=list(defaultZipableExtensions),
+                        help="Template Results with these extensions are also zipped. Extensions have to include the '.' in the beginning. Already set: "+", ".join(["'"+e+"'" for e in defaultZipableExtensions]))
+
         stages=OptionGroup(self.parser,
                            "Stages",
                            "Which steps should be executed")
@@ -578,8 +599,15 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
                                expressionDelimiter=self.opts.expressionDelimiter,
                                assignmentDebug=self.pickAssignmentDebug(fName),
                                assignmentLineStart=self.opts.assignmentLineStart)
-                t.writeToFile(tName,values)
-                copymode(fName,tName)
+
+                ext = path.splitext(tName)[1]
+                if self.opts.zipExtensionlessTemplateResults and (ext == "" or ext in self.opts.zipableExtensions):
+                    gzip = True
+                else:
+                    gzip = False
+
+                written = t.writeToFile(tName, values, gzip=gzip)
+                copymode(fName, written)
 
     def overloadDir(self,here,there):
         """Copy files recursively. Overwrite local copies if they exist"""
@@ -651,7 +679,10 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
                                   parallel=True,
                                   paraviewLink=self.opts.paraviewFile)
 
+        previousDirectory = None
         if self.opts.executeInCaseDirectory:
+            previousDirectory = path.abspath(path.curdir)
+
             from os import chdir
             if path.realpath(cName)==path.realpath(path.curdir):
                 self.warning("Not changing directory because Already in",path.realpath(path.curdir))
@@ -666,6 +697,10 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
             if self.__lastMessage:
                 self.__writeToStateFile(sol,self.__lastMessage+" failed")
             raise
+
+        if previousDirectory:
+            # Change back if this is used in a script
+            chdir(previousDirectory)
 
     def __strip(self,val):
         """Strip extra " from strings"""

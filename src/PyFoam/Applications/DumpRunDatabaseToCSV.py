@@ -8,6 +8,8 @@ from PyFoam.Basics.RunDatabase import RunDatabase
 
 from PyFoam.ThirdParty.six import print_
 
+from os import path
+
 class DumpRunDatabaseToCSV(PyFoamApplication):
     def __init__(self,
                  args=None,
@@ -107,7 +109,7 @@ a CSV-file
                 print_("Pandas data:\n",dump)
 
         self.setData({
-             "database" : db ,
+             "database" : path.abspath(source),
              "dump"     : dump
         })
 

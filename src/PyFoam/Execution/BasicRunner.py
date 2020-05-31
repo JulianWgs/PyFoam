@@ -8,12 +8,14 @@ from os import path
 from platform import uname
 from threading import Timer
 from time import time,asctime
+import uuid
 
 from PyFoam.FoamInformation import oldAppConvention as oldApp
 from PyFoam.ThirdParty.six import print_
 import PyFoam.Basics.FoamFileGenerator
 from PyFoam.Basics.DataStructures import makePrimitiveString
 from PyFoam.Basics.Utilities import rmtree
+from PyFoam.Basics.RunDatabase import RunDatabase
 
 if not 'curdir' in dir(path) or not 'sep' in dir(path):
     print_("Warning: Inserting symbols into os.path (Python-Version<2.3)")
@@ -229,6 +231,7 @@ class BasicRunner(object):
         self.jobId=jobId
 
         self.data={"lines":0} #        self.data={"lines":0L}
+        self.data[RunDatabase.unique_id]=str(uuid.uuid1())
         self.data["logfile"]=self.logFile
         self.data["casefullname"]=path.abspath(self.dir)
         self.data["casename"]=path.basename(path.abspath(self.dir))

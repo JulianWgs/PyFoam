@@ -1,4 +1,4 @@
-# $Id: _Gnuplot.py 305 2008-01-17 20:10:44Z bmcage $
+# $Id$
 
 # Copyright (C) 1998-2003 Michael Haggerty <mhagger@alum.mit.edu>
 #
@@ -153,7 +153,7 @@ class Gnuplot:
         'output' : 'string',
         }
 
-    def __init__(self, filename=None, persist=None, debug=0):
+    def __init__(self, filename=None, persist=None, debug=0, quiet=False):
         """Create a Gnuplot object.
 
         Create a 'Gnuplot' object.  By default, this starts a gnuplot
@@ -176,7 +176,7 @@ class Gnuplot:
         """
 
         if filename is None:
-            self.gnuplot = gp.GnuplotProcess(persist=persist)
+            self.gnuplot = gp.GnuplotProcess(persist=persist, quiet=quiet)
         else:
             if persist is not None:
                 raise Errors.OptionError(

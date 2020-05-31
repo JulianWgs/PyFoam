@@ -261,7 +261,7 @@ class SolutionDirectory(Utilities):
             missing.append(self.constantDir())
         elif not path.isdir(self.constantDir()):
             missing.append(self.constantDir())
-        if not path.exists(self.controlDict()):
+        if not path.exists(self.controlDict()) and not path.exists(self.controlDict()+".gz"):
             missing.append(self.controlDict())
 
         return missing
@@ -1085,7 +1085,7 @@ class SolutionDirectory(Utilities):
         if directory:
             theDir=path.join(theDir,directory)
 
-        if path.exists(path.join(theDir,name)):
+        if path.exists(path.join(theDir,name)) or path.exists(path.join(theDir,name+".gz")):
             result=ParsedParameterFile(path.join(theDir,name)).content
         else:
             warning("File",name,"does not exist in directory",directory,"of case",self.name)
