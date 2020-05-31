@@ -1,3 +1,5 @@
+#+OPTIONS: toc:nil
+
 * What it is
 
   The purpose of this library is to support working with the OpenSource

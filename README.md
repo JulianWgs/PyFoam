@@ -1,15 +1,3 @@
-# Table of Contents
-
-1.  [What it is](#org8e27d27)
-2.  [Installation](#org5380b22)
-3.  [License](#orgf26070d)
-4.  [Contributors](#org0388d7f)
-5.  [Further reading](#org820f59e)
-6.  [This document](#orgca16204)
-
-
-<a id="org8e27d27"></a>
-
 # What it is
 
 The purpose of this library is to support working with the OpenSource
@@ -36,8 +24,6 @@ More information is found on [the OpenFOAM Wiki](http://openfoamwiki.net/index.p
 Introductory presentations on PyFoam can be found there
 
 
-<a id="org5380b22"></a>
-
 # Installation
 
 The easiest way to install PyFoam is the Python package-manager `pip`:
@@ -46,8 +32,6 @@ The easiest way to install PyFoam is the Python package-manager `pip`:
 
 which will install PyFoam
 
-
-<a id="orgf26070d"></a>
 
 # License
 
@@ -58,8 +42,6 @@ option) any later version.  See the file COPYING in this directory,
 for a description of the GNU General Public License terms under which
 you can copy the files.
 
-
-<a id="org0388d7f"></a>
 
 # Contributors
 
@@ -76,8 +58,6 @@ The people who contributed to PyFoam (If I forgot someone: tell me):
 -   Oliver Borm
 
 
-<a id="org820f59e"></a>
-
 # Further reading
 
 These documents give further information
@@ -90,8 +70,6 @@ These documents give further information
 For information on the usage see the presentations on [the `PyFOAM`
 page on the OpenFOAM-Wiki](https://openfoamwiki.net/index.php/Contrib_PyFoam)
 
-
-<a id="orgca16204"></a>
 
 # This document
 
