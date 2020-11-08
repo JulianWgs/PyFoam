@@ -1,4 +1,12 @@
 # -*- mode: org -*-
+* Next Release - Not yet released
+** Bug fixes
+*** Auto-plotting of markers causes problem with =snappyHexMesh=
+    As reported on
+    https://sourceforge.net/p/openfoam-extend/ticketspyfoam/227/ by
+    Guillaume Broggi the auto-plotting of markers for =snappyHexMesh=
+    causes problems with =pyFoamRunner.py= because the =Dummy=-plotter
+    does not implement the appropriate methods. This has been fixed
 * Version 2020.05 - 2020-05-31
   This is the first version of /PyFoam/ where the version numbers
   change from pseudo-semantic versioning to date-based versions
