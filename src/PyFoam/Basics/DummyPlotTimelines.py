@@ -46,6 +46,12 @@ class DummyPlotTimelines(GeneralPlotTimelines):
 
         pass
 
+    def addVerticalMarker(self,colorRGB=None,label=None):
+        """Add a vertical line to the graph at the current time. Optionally
+        color it and add a label"""
+
+        pass
+
     def actualSetTitle(self,title):
         """Sets the title"""
 
