@@ -7,6 +7,13 @@
     Guillaume Broggi the auto-plotting of markers for =snappyHexMesh=
     causes problems with =pyFoamRunner.py= because the =Dummy=-plotter
     does not implement the appropriate methods. This has been fixed
+*** Single parameter makes =pyFoamPrepareCase= fail
+    This was reported on the MessageBoard
+
+    If only one parameter is defined then the routine for formatting
+    the parameters failed
+
+    Fixed
 * Version 2020.05 - 2020-05-31
   This is the first version of /PyFoam/ where the version numbers
   change from pseudo-semantic versioning to date-based versions
