@@ -937,7 +937,7 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
         if self.opts.verbose and len(vals)>0:
             print_("\nUsed values\n")
             nameLen=max(len("Name"),
-                        max(*[len(k) for k in vals.keys()]))
+                        max([len(k) for k in vals.keys()]))
             format="%%%ds - %%s" % nameLen
             print_(format % ("Name","Value"))
             print_("-"*40)
@@ -987,7 +987,7 @@ The used parameters are written to a file 'PyFoamPrepareCaseParameters' and are 
                 if self.opts.verbose and len(vals)>0:
                     print("\nDerived Values\n")
                     nameLen=max(len("Name"),
-                                max(*[len(k) for k in derived]))
+                                max([len(k) for k in derived]))
                     format="%%%ds - %%s" % nameLen
                     print_(format % ("Name","Value"))
                     print_("-"*40)
